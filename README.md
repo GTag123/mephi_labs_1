@@ -21,3 +21,9 @@ $ git config --local user.email "<ваш email с mephi-dap.manytask.org>"
 # Настраиваем возможность получать обновления при появлении новых задач.
 $ git remote add upstream git@gitlab.manytask.org:mephi-dap-programming-1/public-2022.git
 ```
+
+## Подтягиваем новые задачи
+
+```bash
+$ git pull upstream main
+```
