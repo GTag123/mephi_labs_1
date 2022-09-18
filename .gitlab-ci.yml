@@ -1,0 +1,16 @@
+variables:
+  GIT_STRATEGY: clone
+  REGISTRY: cr.yandex/crpmmm1ugaibpaqr61te/programming-1
+
+grade:
+  image: $REGISTRY/base:latest
+  rules:
+    - if: $CI_PROJECT_NAME =~ /^public-20\d\d/
+      when: never
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      when: on_success
+    - when: never
+  script:
+    - cd /opt/mephi/
+    - python3 -m checker/__main__.py grade
+  timeout: 10 minutes
