@@ -12,5 +12,5 @@ grade:
     - when: never
   script:
     - cd /opt/mephi/
-    - python3 -m checker/__main__.py grade
+    - python3.9 -m checker grade
   timeout: 10 minutes
