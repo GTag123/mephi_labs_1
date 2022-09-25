@@ -18,6 +18,9 @@ $ cd <ваш репозиторий>
 $ git config --local user.name "<ваш login с mephi-dap.manytask.org>"
 $ git config --local user.email "<ваш email с mephi-dap.manytask.org>"
 
+# По дефолту просим git запускать команду rebase для подтягивания конфликтующих изменений.
+$ git config --local pull.rebase true
+
 # Настраиваем возможность получать обновления при появлении новых задач.
 $ git remote add upstream https://gitlab.manytask.org/mephi-dap-programming-1/public-2022.git
 ```
@@ -32,9 +35,6 @@ $ git pull upstream main
 
 Если старые задачи менялись, при подтягивании изменений возможен конфликт ваших локальных изменений и новых изменений от преподавателей. Для разрешения конфликта предлагается:
 ```bash
-# По дефолту запускается git rebase для подтягивания конфликтующих изменений.
-$ git config --local pull.rebase true
-
 # Показать файлы с конфликтами.
 $ git status
 
