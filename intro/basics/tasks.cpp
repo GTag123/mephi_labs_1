@@ -54,7 +54,7 @@ namespace NLoop {
 }
 namespace NMath {
     double ComputeMathFormula(const double a){
-        return abs((sin(a) / 2 + cos(a)) * (sin(a) / 2 + cos(a)) + tan(a) * atan(a));
+        return std::abs((std::sin(a) / 2 + std::cos(a)) * (std::sin(a) / 2 + std::cos(a)) + std::tan(a) * std::atan(a));
     };
     bool IsPositive(int arg){
         if (arg > 0) return true;

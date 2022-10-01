@@ -36,7 +36,7 @@ void CheckLoop() {
 }
 
 void CheckMath() {
-    assert(std::fabs(-0.8605496856 - NMath::ComputeMathFormula(2.42)) < 1e-9);
+    assert(std::fabs(0.8605496856 - NMath::ComputeMathFormula(2.42)) < 1e-9);
     assert(NMath::ComputeMathFormula(0) == 1);
     assert(NMath::IsPositive(10) == true);
     assert(NMath::IsPositive(-1) == false);
