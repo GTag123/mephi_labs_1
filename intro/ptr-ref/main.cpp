@@ -26,7 +26,7 @@ void CheckPointers() {
     {
         const int a[] = {1,    2,   3,  4, 5,  6, 7,   8,    9, 10};
         const int b[] = {12, 345, 123, 91, 0, 19, 1, 342, 1231, 10};
-        assert(NPointers::ScalarProduct(a, b, sizeof(a) / sizeof(a[0])) == 2229);
+        assert(NPointers::ScalarProduct(a, b, sizeof(a) / sizeof(a[0])) == 15471);
     }
 
     {
