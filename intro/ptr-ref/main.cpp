@@ -10,7 +10,6 @@ void CheckPointers() {
 
         assert(x == 11);
     }
-//
     {
         int a = 2097151;
         int b = 1024;
@@ -46,35 +45,35 @@ void CheckPointers() {
     }
 }
 //
-//void CheckReferences() {
-//    {
-//        int a = 1231;
-//        int b = 234;
-//        NReferences::MultiplyInplace(a, b);
-//        assert(a == 288054);
-//    }
-//
-//    {
-//        const int a[] = {1, 2, 3, 4, 5, 6};
-//        int b[] = {1, 2, 3, 4, 5};
-//        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == 1);
-//    }
-//
-//    {
-//        const int a[] = {1, 2, 3, 4, 5, 1};
-//        int b[] = {1, 2, 3, 4, 5};
-//        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == -1);
-//    }
-//
-//    {
-//        const int a[] = {1, 2, 3, 4, 5, 3};
-//        int b[] = {1, 2, 3, 4, 5};
-//        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == 0);
-//    }
-//}
+void CheckReferences() {
+    {
+        int a = 1231;
+        int b = 234;
+        NReferences::MultiplyInplace(a, b);
+        assert(a == 288054);
+    }
+
+    {
+        const int a[] = {1, 2, 3, 4, 5, 6};
+        int b[] = {1, 2, 3, 4, 5};
+        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == 1);
+    }
+
+    {
+        const int a[] = {1, 2, 3, 4, 5, 1};
+        int b[] = {1, 2, 3, 4, 5};
+        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == -1);
+    }
+
+    {
+        const int a[] = {1, 2, 3, 4, 5, 3};
+        int b[] = {1, 2, 3, 4, 5};
+        assert(NReferences::CompareArraysByAverage(a, sizeof(a) / sizeof(a[0]), b) == 0);
+    }
+}
 
 int main() {
     CheckPointers();
-//    CheckReferences();
+    CheckReferences();
     return 0;
 }

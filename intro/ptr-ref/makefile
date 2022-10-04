@@ -1,6 +1,6 @@
 all: main.o tasks.o
 	g++ --std=c++2a main.o tasks.o -o main
-	./main
+	./main.exe
 
 tasks.o: tasks.cpp
 	g++ --std=c++2a -c tasks.cpp -o tasks.o

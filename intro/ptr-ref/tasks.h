@@ -9,8 +9,7 @@ namespace NPointers {
 }
 
 namespace NReferences {
-    /* To implement:
-    MultiplyInplace
-    CompareArraysByAverage
-    */
+
+    void MultiplyInplace(int& a, int& b);
+    int CompareArraysByAverage(const int* a, int size, int* b);
 }
