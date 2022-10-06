@@ -14,8 +14,8 @@ public:
     void PushBack(int value = 0);
     void PopBack();
 
-    const int& operator [](const size_t& i) const;
-    int& operator [](const size_t& i);
+    const int& operator [](const size_t i) const;
+    int& operator [](const size_t i);
     explicit operator bool() const;
 
     bool operator <(const Array& it) const;
