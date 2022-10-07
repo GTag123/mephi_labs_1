@@ -7,8 +7,8 @@
 Необходимо реализовать конструкторы и деструктор, которые логируют состояние. Набор конструкторов и деструкторов содержится в array.h из задания.
 Конструкторы логируют в переданный выходной поток печатает`<constructor name> <print array>\n`. Имена конструкторов:
 * `Array(std::ostream& ostream)` печатает имя `Constructed.`
-* `Array(const Array& array)` печатает имя `Constructed with default.`
-* `Array(size_t size, std::ostream& ostream = std::cout, int defaultValue = 0)` печатает имя `Constructed from another Array`
+* `Array(const Array& array)` печатает имя `Constructed from another Array`
+* `Array(size_t size, std::ostream& ostream = std::cout, int defaultValue = 0)` печатает имя `Constructed with default.`
 А `<print array>` - результат вызова оператора `<<`, который описан ниже в разделе операторов
 Например, `Array(2, 0)` должен напечатать `Constructed with default. Result Array's capacity is 4 and size is 2, elements are: 0, 0`
 Деструктор должен в ostream вывести строчку `"Destructed <size>\n"`, где size - размер массива на момент удаления.
@@ -39,7 +39,7 @@
   * `bool operator ==(const Array& it) const`
   * `bool operator <=(const Array& it) const`
   * `bool operator >=(const Array& it) const`
-* `std::ostream& operator <<(std::ostream& ostream, const Array& array)` - оператор вывода (он же используется в конструкторе). Выводит следующий текст: `Result Array's capacity is <Array.Capacity> and size is <Array.Size>, elements are: <Array[0]>, <Array[1]>, ..., <Array[Array.Size() - 1]>`. Если массив пустой, то не выводит список элементов.
+* `std::ostream& operator <<(std::ostream& ostream, const Array& array)` - оператор вывода (он же используется в конструкторе). Выводит следующий текст: `Result Array's capacity is <Array.Capacity> and size is <Array.Size>, elements are: <Array[0]>, <Array[1]>, ..., <Array[Array.Size() - 1]>`. Если массив пустой, то не выводит список элементов. Обратите внимание, что перевода строки в конце быть не должно, это важно.
 Примеры резульата вызова:
 * `Result Array's capacity is 16 and size is 10, elements are: 123, 345, 456, 1, 5, 81, 234, 345, 0, 9`
 * `Result Array's capacity is 16 and size is 0`

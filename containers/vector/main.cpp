@@ -2,6 +2,7 @@
 
 #include <cassert>
 #include <sstream>
+#include <array>
 
 void CheckOutputOperator() {
     std::stringstream out;
@@ -41,11 +42,21 @@ void CheckCopyConstructor() {
         Array other = Array(array);
         getline(out, ans);
         assert(ans == "Constructed from another Array. Result Array's capacity is 4 and size is 2, elements are: 0, 0");
+
+        array << 10;
+        out << array << '\n';
+        getline(out, ans);
+        assert(ans == "Result Array's capacity is 4 and size is 3, elements are: 0, 0, 10");
+
+        other << 20;
+        out << other << '\n';
+        getline(out, ans);
+        assert(ans == "Result Array's capacity is 4 and size is 3, elements are: 0, 0, 20");
     }
     getline(out, ans);
-    assert(ans == "Destructed 2");
+    assert(ans == "Destructed 3");
     getline(out, ans);
-    assert(ans == "Destructed 2");
+    assert(ans == "Destructed 3");
 }
 
 void CheckCopyConstructorWithResize() {
@@ -187,8 +198,17 @@ void CheckConcat() {
 
     a << b;
     out << a << "\n";
+    const std::array<std::string, 4> prefix = {"Result", "Array's", "capacity", "is"};
+    for (const std::string& res : prefix) {
+        out >> ans;
+        assert(ans == res);
+    }
+    {
+        int tmp;
+        out >> tmp; //read capacity
+    }
     getline(out, ans);
-    assert(ans == "Result Array's capacity is 16 and size is 10, elements are: 123, 345, 456, 1, 5, 81, 234, 345, 0, 9");
+    assert(ans == " and size is 10, elements are: 123, 345, 456, 1, 5, 81, 234, 345, 0, 9"); // check suffix
 }
 
 void CheckComparisonOperator() {

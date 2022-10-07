@@ -1,9 +1,9 @@
 all: main.o
-	g++ --std=c++2a main.o -o main
-	./main
+	g++ --std=c++2a -fsanitize=address main.o -o main
+	ASAN_OPTIONS=detect_leaks=1 ./main
 
-main.o: main.cpp
-	g++ --std=c++2a -c main.cpp -o main.o
+main.o: main.cpp array.h
+	g++ --std=c++2a -fsanitize=address -c main.cpp -o main.o
 
 clean:
 	rm -f main.o array.o main

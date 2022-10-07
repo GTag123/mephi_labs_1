@@ -7,8 +7,8 @@ public:
     Array(size_t size, std::ostream& ostream = std::cout, int defaultValue = 0);
     ~Array();
 
-    size_t Size() const noexcept;
-    size_t Capacity() const noexcept;
+    size_t Size() const;
+    size_t Capacity() const;
     void Reserve(size_t newCapacity);
     void Resize(size_t newSize);
     void PushBack(int value = 0);
