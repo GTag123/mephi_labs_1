@@ -6,4 +6,4 @@ main.o: main.cpp array.h
 	g++ --std=c++2a -fsanitize=address -c main.cpp -o main.o
 
 clean:
-	rm -f main.o array.o main
+	rm -f main.o main

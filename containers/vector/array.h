@@ -28,11 +28,11 @@ public:
     Array& operator <<(const int& value);
     Array& operator <<(const Array& it);
 
+    friend std::ostream& operator <<(std::ostream& ostream, const Array& array);
+
 private:
     int* Elements_;
     size_t Size_;
     size_t Capacity_;
     std::ostream& Ostream_;
 };
-
-std::ostream& operator <<(std::ostream& ostream, const Array& array);
