@@ -1,11 +1,15 @@
+#include "task.h"
+
+#if defined(_LIBCPP_VECTOR) || defined(_LIBCPP_LIST) || defined(_LIBCPP_DEQUE) || defined(_LIBCPP_FORWARD_LIST)
+#error "include vector, list or deque forbidden"
+#endif
+
 #include <cassert>
 #include <initializer_list>
 #include <vector>
 #include <iostream>
 #include <algorithm>
 #include <string>
-
-#include "task.h"
 
 using namespace std;
 
