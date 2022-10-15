@@ -80,7 +80,7 @@ void TestProperties() {
 
         FlattenedVector<int> flattened_vector(vector);
 
-        assert(std::distance(flattened_vector.begin(), flattened_vector.end()) == expected.size());
+        assert(std::distance(flattened_vector.begin(), flattened_vector.end()) == static_cast<ssize_t>(expected.size()));
 
         auto iter = flattened_vector.begin() + 33;
         assert(((void)[](auto x){ ++x; }(iter), *iter) == *iter);
