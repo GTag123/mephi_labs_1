@@ -16,7 +16,7 @@ int main() {
 
     assert(hashMap.size() == toAdd.size());
     for (const auto& kv : toAdd) {
-        assert(hashMap.contains(kv.first));
+        assert(hashMap.find(kv.first) != hashMap.end());
         assert(hashMap[kv.first] == kv.second);
     }
 
