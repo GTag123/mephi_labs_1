@@ -1,4 +1,4 @@
-CXXFLAGS = -std=c++2a -Wall -Werror -fsanitize=address
+CXXFLAGS = -g -std=c++2a -Wall -Werror -fsanitize=address
 
 all: main.cpp flatten.h
 	g++ $(CXXFLAGS) main.cpp -o main

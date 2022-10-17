@@ -64,7 +64,7 @@ void TestProperties() {
     {
         const auto [array, vector] = GenerateSample<int64_t>(100, g_random_engine);
 
-        assert(std::distance(array.begin(), array.end()) == array.Size());
+        assert(std::distance(array.begin(), array.end()) == static_cast<ssize_t>(array.Size()));
 
         auto iter = array.begin() + 33;
         assert(((void)[](auto x){ ++x; }(iter), *iter) == *iter);

@@ -2,6 +2,11 @@
 
 #if defined(_LIBCPP_VECTOR) || defined(_LIBCPP_LIST) || defined(_LIBCPP_DEQUE) || defined(_LIBCPP_FORWARD_LIST)
 #error "include vector, list or deque forbidden"
+#else
+#include <deque>
+#include <forward_list>
+#include <list>
+#include <vector>
 #endif
 
 #include <cassert>

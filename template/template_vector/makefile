@@ -8,10 +8,7 @@ all: run
 run: compile
 	./$(RESULT)
 
-compile: $(SOURCES) check $(RESULT)
-
-check:
-	./check.sh
+compile: $(SOURCES) $(RESULT)
 
 .cpp.o:
 	g++ -c $(CFLAGS) $< -o $@

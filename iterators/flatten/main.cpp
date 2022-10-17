@@ -6,6 +6,7 @@
 
 #include <algorithm>
 #include <cassert>
+#include <chrono>
 #include <memory>
 #include <random>
 #include <string>
@@ -79,7 +80,7 @@ void TestProperties() {
 
         FlattenedVector<int> flattened_vector(vector);
 
-        assert(std::distance(flattened_vector.begin(), flattened_vector.end()) == expected.size());
+        assert(std::distance(flattened_vector.begin(), flattened_vector.end()) == static_cast<ssize_t>(expected.size()));
 
         auto iter = flattened_vector.begin() + 33;
         assert(((void)[](auto x){ ++x; }(iter), *iter) == *iter);
@@ -218,6 +219,8 @@ void TestStress() {
         const auto size = flattened.size();
         FlattenedVector<uint64_t> flattened_vector(vector);
 
+        const auto start_ts = std::chrono::steady_clock::now();
+
         auto flattening_iter = flattened_vector.begin();
         for (int i = 0, pos = 0; i < 100000; ++i) {
             assert(std::distance(flattened_vector.begin(), flattening_iter) == pos);
@@ -233,6 +236,9 @@ void TestStress() {
             flattening_iter += step;
             assert(flattened[pos] == *flattening_iter);
         }
+
+        const std::chrono::duration<double> elapsed_time = std::chrono::steady_clock::now() - start_ts;
+        assert(elapsed_time.count() < 1.0);
     };
 
     {
