@@ -41,16 +41,36 @@ public:
         std::cout << "Destructed " << Size() << std::endl; // add size
     };
 
-    size_t Size() const;
-    size_t Capacity() const;
-    void Reserve(size_t newCapacity);
+    size_t Size() const {
+        return Size_;
+    };
+    size_t Capacity() const {
+        return Capacity_;
+    };
+    void Reserve(size_t newCapacity){
+        int* n = new int[newCapacity];
+        for (int i = 0; i < this->Size(); ++i) {
+            n[i] = (*this)[i];
+        }
+        delete Elements_;
+        Elements_ = n;
+    };
     void Resize(size_t newSize);
     void PushBack(int value = 0);
-    void PopBack();
+    void PopBack() {
+        Size_--;
+    };
 
-    const int& operator [](const size_t i) const;
-    int& operator [](const size_t i);
-    explicit operator bool() const;
+    const int& operator [](const size_t i) const {
+        return Elements_[i];
+    };
+    int& operator [](const size_t i){
+        return Elements_[i];
+    };
+    explicit operator bool() const{
+        if (Size_ > 0) return true;
+        return false;
+    };
 
     bool operator <(const Array& it) const;
     bool operator >(const Array& it) const;
