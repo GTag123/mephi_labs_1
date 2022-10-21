@@ -48,6 +48,7 @@ public:
         return Capacity_;
     };
     void Reserve(size_t newCapacity){
+        if (newCapacity <= this->Capacity_) return;
         int* n = new int[newCapacity];
         for (int i = 0; i < this->Size(); ++i) {
             n[i] = (*this)[i];
@@ -55,8 +56,26 @@ public:
         delete Elements_;
         Elements_ = n;
     };
-    void Resize(size_t newSize);
-    void PushBack(int value = 0);
+    void Resize(size_t newSize){
+        if (newSize <= Capacity_){
+
+        } else {
+            Reserve(newSize);
+
+        }
+        for (int i = Size_; i < newSize; ++i) {
+            (*this)[i] = 0;
+        }
+        Size_ = newSize;
+    };
+    void PushBack(int value = 0) {
+        if (Capacity_ == Size_) {
+            Reserve(Capacity_ * 2);
+        }
+        Elements_[Size_] = value;
+        Size_++;
+    };
+
     void PopBack() {
         Size_--;
     };
@@ -72,17 +91,70 @@ public:
         return false;
     };
 
-    bool operator <(const Array& it) const;
-    bool operator >(const Array& it) const;
-    bool operator !=(const Array& it) const;
-    bool operator ==(const Array& it) const;
-    bool operator <=(const Array& it) const;
-    bool operator >=(const Array& it) const;
+    bool operator <(const Array& it) const{
+        for (int i = 0; i < std::min(it.Size(), this->Size_); ++i) {
+            if ((*this)[i] < it[i]){
+                return true;
+            }
+            if ((*this)[i] > it[i]){
+                return false;
+            }
+        }
+        if (this->Size_ < it.Size()) return true;
+        return false;
+    };
 
-    Array& operator <<(const int& value);
-    Array& operator <<(const Array& it);
+    bool operator >(const Array& it) const{
+        for (int i = 0; i < std::min(it.Size(), this->Size_); ++i) {
+            if ((*this)[i] > it[i]){
+                return true;
+            }
+            if ((*this)[i] < it[i]){
+                return false;
+            }
+        }
+        if (this->Size_ > it.Size()) return true;
+        return false;
+    };
+    bool operator !=(const Array& it) const{
+        return !(*this == it);
+    };
+    bool operator ==(const Array& it) const{
+        if (this->Size_ != it.Size()) return false;
+        for (int i = 0; i < this->Size_; ++i) {
+            if ((*this)[i] != it[i]) return false;
+        }
+        return true;
+    };
+    bool operator <=(const Array& it) const{
+        if (*this == it) return true;
+        return (*this < it);
+    };
+    bool operator >=(const Array& it) const{
+        if (*this == it) return true;
+        return (*this > it);
+    };
 
-    friend std::ostream& operator <<(std::ostream& ostream, const Array& array);
+    Array& operator <<(const int& value){
+        PushBack(value);
+        return *this;
+    };
+    Array& operator <<(const Array& it){
+        for (int i = 0; i < it.Size(); ++i) {
+            PushBack(it[i]);
+        }
+        return *this;
+    };
+
+    friend std::ostream& operator <<(std::ostream& ostream, const Array& array){
+        ostream << "Result Array's capacity is " << array.Capacity() << " and size is " <<
+                   array.Size() << ", elements are: ";
+        for (int i = 0; i < array.Size() - 1; ++i) {
+            ostream << array[i] << ", ";
+        }
+        ostream << array[array.Size() - 1] << std::endl;
+        return ostream;
+    };
 
 private:
     int* Elements_;
