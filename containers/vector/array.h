@@ -5,25 +5,25 @@
 class Array {
 public:
     std::ostream& Ostream_;
-    std::string getStr(){
-        return "Result Array's capacity is " + std::to_string(Capacity_) + "and size is " + std::to_string(Size_);
-    }
     Array(std::ostream& ostream):
             Ostream_(ostream){
         Capacity_ = 2;
         Size_ = 0;
         Elements_ = new int[Capacity_];
-        Ostream_ << "Constructed. " << getStr() << std::endl;
+        Ostream_.clear();
+        Ostream_ << "Constructed. " << (*this);
     };
     Array(const Array& array)
     : Size_(array.Size()),
       Capacity_(array.Capacity()),
       Ostream_(array.Ostream_){
         Elements_ = new int[Capacity_];
+
         for (int i = 0; i < Size_; ++i) {
             Elements_[i] = array[i];
         }
-        Ostream_ << "Constructed from another Array. " << getStr() << std::endl;
+        Ostream_.clear();
+        Ostream_ << "Constructed from another Array. " << (*this) << std::endl;
     };
 
     Array(size_t size, std::ostream& ostream = std::cout, int defaultValue = 0)
@@ -34,11 +34,14 @@ public:
         for (int i = 0; i < size; ++i) {
             Elements_[i] = defaultValue;
         }
-        Ostream_ << "Constructed with default. " << getStr() << std::endl;
+        Ostream_.clear();
+        Ostream_ << "Constructed with default. " << (*this) << std::endl;
 
     };
     ~Array() {
-        std::cout << "Destructed " << Size() << std::endl; // add size
+        delete []Elements_;
+        Ostream_.clear();
+        Ostream_ << "Destructed " << Size() << std::endl; // add size
     };
 
     size_t Size() const {
@@ -50,22 +53,25 @@ public:
     void Reserve(size_t newCapacity){
         if (newCapacity <= this->Capacity_) return;
         int* n = new int[newCapacity];
+        Capacity_ = newCapacity;
         for (int i = 0; i < this->Size(); ++i) {
             n[i] = (*this)[i];
         }
-        delete Elements_;
+        delete []Elements_;
         Elements_ = n;
     };
     void Resize(size_t newSize){
-        if (newSize <= Capacity_){
-
-        } else {
+        if (newSize > Capacity_) {
             Reserve(newSize);
-
         }
-        for (int i = Size_; i < newSize; ++i) {
-            (*this)[i] = 0;
+        if (newSize > Size_){
+            for (int i = (int)Size_; i < newSize; ++i) {
+                (*this)[i] = 0;
+            }
         }
+//        else if (newSize < Size_) {
+//
+//        }
         Size_ = newSize;
     };
     void PushBack(int value = 0) {
@@ -147,12 +153,18 @@ public:
     };
 
     friend std::ostream& operator <<(std::ostream& ostream, const Array& array){
+        ostream.clear();
         ostream << "Result Array's capacity is " << array.Capacity() << " and size is " <<
-                   array.Size() << ", elements are: ";
-        for (int i = 0; i < array.Size() - 1; ++i) {
-            ostream << array[i] << ", ";
+                   array.Size();
+
+        if(array.Size() > 0){
+            ostream << ", elements are: ";
+            for (int i = 0; i < array.Size() - 1; ++i) {
+                ostream << array[i] << ", ";
+            }
+            ostream << array[array.Size() - 1];
         }
-        ostream << array[array.Size() - 1] << std::endl;
+
         return ostream;
     };
 

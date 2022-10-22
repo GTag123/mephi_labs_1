@@ -1,5 +1,5 @@
 #include "array.h"
-
+#include <iostream>
 #include <cassert>
 #include <sstream>
 #include <array>
@@ -20,14 +20,15 @@ void CheckOutputOperator() {
 void CheckDefaultConstructor() {
     std::stringstream out;
     std::string ans;
-
     {
         Array array = Array(out);
         getline(out, ans);
         assert(ans == "Constructed. Result Array's capacity is 2 and size is 0");
     }
+
     getline(out, ans);
     assert(ans == "Destructed 0");
+
 }
 
 void CheckCopyConstructor() {
@@ -74,12 +75,11 @@ void CheckCopyConstructorWithResize() {
 
         Array other = Array(array);
         getline(out, ans);
+//        std::cout << ans << std::endl;
         assert(ans == "Constructed from another Array. Result Array's capacity is 10 and size is 10, elements are: 9, 8, 7, 6, 5, 4, 3, 2, 1, 0");
-
         out << array << "\n";
         std::string first;
         getline(out, first);
-
         out << other << "\n";
         std::string second;
         getline(out, second);
@@ -172,6 +172,7 @@ void CheckCapacityWithResizeAndBoolOperator() {
     assert(a.Capacity() == 10 && a.Size() == 5 && a);
 
     a.Resize(10);
+    std::cout << a.Capacity() << " " << a.Size() << " " << bool(a) << std::endl;
     assert(a.Capacity() == 10 && a.Size() == 10 && a);
     a.Resize(1);
     a.Reserve(100);
@@ -197,10 +198,13 @@ void CheckConcat() {
     b << 234 << 345 << 0 << 9;
 
     a << b;
+
     out << a << "\n";
+    std::cout << std::endl;
     const std::array<std::string, 4> prefix = {"Result", "Array's", "capacity", "is"};
     for (const std::string& res : prefix) {
         out >> ans;
+        std::cout << ans << std::endl;
         assert(ans == res);
     }
     {
