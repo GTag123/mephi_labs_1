@@ -154,6 +154,7 @@ public:
 
     friend std::ostream& operator <<(std::ostream& ostream, const Array& array){
         ostream.clear();
+
         ostream << "Result Array's capacity is " << array.Capacity() << " and size is " <<
                    array.Size();
 
