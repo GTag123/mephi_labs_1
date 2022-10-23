@@ -173,11 +173,6 @@ public:
         delete[] Elements_;
         Elements_ = n;
         Size_++;
-//        std::cout << "open debug" << std::endl;
-//        for (int i = 0; i < (int)Size_; ++i) {
-//            std::cout << (*this)[i] << " ";
-//        }
-//        std::cout << "\nclose debug" << std::endl;
         return true;
     }
 

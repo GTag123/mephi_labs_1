@@ -61,13 +61,46 @@ void TestImplementation(const initializer_list<T>& il, const initializer_list<pa
     sort(&arr1[0], &arr1[arr1.Size()], greater<T>());
     assert(arr1 > arr2);
 
+//    for (int i = 0; i < (int)arr1.Size(); ++i) {
+//        std::cout << arr1[i] << " ";
+//    }
+//    std::cout << std::endl;
+//    for (int i = 0; i < (int)arr2.Size(); ++i) {
+//        std::cout << arr2[i] << " ";
+//    }
+//    std::cout << std::endl << arr1.Size() << " " << arr1.Capacity() << "   " << arr2.Size() << " " << arr2.Capacity() << std::endl;
+
+
     size_t insertedCount = 0;
     for (const auto& valPos : toInsert) {
+//        std::cout << "insertion to pos: " << valPos.second << " value: " << valPos.first << std::endl;
         assert(arr1.Insert(valPos.second, valPos.first));
         ++insertedCount;
         assert(arr1[valPos.second] == valPos.first);
+
+//        for (int i = 0; i < (int)arr1.Size(); ++i) {
+//            std::cout << arr1[i] << " ";
+//        }
+//        std::cout << std::endl;
+//        for (int i = 0; i < (int)arr2.Size(); ++i) {
+//            std::cout << arr2[i] << " ";
+//        }
+//        std::cout << std::endl;
+
     }
     assert(!arr1.Insert(arr1.Size() + 1, arr1[0]));
+
+
+//    std::cout << arr1.Size() << " " << arr2.Size() + insertedCount << " end" << std::endl;
+
+//    for (int i = 0; i < (int)arr1.Size(); ++i) {
+//        std::cout << arr1[i] << " ";
+//    }
+//    std::cout << std::endl;
+//    for (int i = 0; i < (int)arr2.Size(); ++i) {
+//        std::cout << arr2[i] << " ";
+//    }
+//    std::cout << std::endl;
 
     assert(arr1.Size() == arr2.Size() + insertedCount);
 

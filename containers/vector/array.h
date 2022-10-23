@@ -4,7 +4,6 @@
 
 class Array {
 public:
-    std::ostream& Ostream_;
     Array(std::ostream& ostream):
             Ostream_(ostream){
         Capacity_ = 2;
@@ -14,9 +13,9 @@ public:
         Ostream_ << "Constructed. " << (*this);
     };
     Array(const Array& array)
-    : Size_(array.Size()),
-      Capacity_(array.Capacity()),
-      Ostream_(array.Ostream_){
+            : Size_(array.Size()),
+              Capacity_(array.Capacity()),
+              Ostream_(array.Ostream_){
         Elements_ = new int[Capacity_];
 
         for (int i = 0; i < Size_; ++i) {
@@ -27,7 +26,7 @@ public:
     };
 
     Array(size_t size, std::ostream& ostream = std::cout, int defaultValue = 0)
-    : Ostream_(ostream){
+            : Ostream_(ostream){
         Size_ = size;
         Capacity_ = size * 2;
         Elements_ = new int[Capacity_];
@@ -156,7 +155,7 @@ public:
         ostream.clear();
 
         ostream << "Result Array's capacity is " << array.Capacity() << " and size is " <<
-                   array.Size();
+                array.Size();
 
         if(array.Size() > 0){
             ostream << ", elements are: ";
@@ -173,5 +172,5 @@ private:
     int* Elements_;
     size_t Size_;
     size_t Capacity_;
-
+    std::ostream& Ostream_;
 };
