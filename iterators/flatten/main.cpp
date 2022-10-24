@@ -217,38 +217,70 @@ void TestStress() {
     auto test = [](std::vector<std::vector<uint64_t>> vector) {
         const auto flattened = Flatten(vector);
         const auto size = flattened.size();
-        FlattenedVector<uint64_t> flattened_vector(vector);
 
         const auto start_ts = std::chrono::steady_clock::now();
 
+        FlattenedVector<uint64_t> flattened_vector(vector);
         auto flattening_iter = flattened_vector.begin();
         for (int i = 0, pos = 0; i < 100000; ++i) {
             assert(std::distance(flattened_vector.begin(), flattening_iter) == pos);
-            int step = 0;
+            int new_pos = 0;
             if (i & 1) {
-                std::uniform_int_distribution<int> step_dist(0, pos);
-                step = -step_dist(g_random_engine);
+                std::uniform_int_distribution<int> step_dist(0, size / 100);
+                new_pos = step_dist(g_random_engine);
             } else {
-                std::uniform_int_distribution<int> step_dist(0, size - pos - 1);
-                step = step_dist(g_random_engine);
+                std::uniform_int_distribution<int> step_dist(9 * size / 100, size - 1);
+                new_pos = step_dist(g_random_engine);
             }
-            pos += step;
-            flattening_iter += step;
+            flattening_iter += new_pos - pos;
+            pos = new_pos;
             assert(flattened[pos] == *flattening_iter);
         }
 
         const std::chrono::duration<double> elapsed_time = std::chrono::steady_clock::now() - start_ts;
-        assert(elapsed_time.count() < 1.0);
+        assert(elapsed_time.count() < 0.5);
     };
 
     {
-        auto vector = GenerateSample<uint64_t>(200000, 154321, g_random_engine);
+        auto vector = GenerateSample<uint64_t>(200000, 184321, g_random_engine);
         test(vector);
     }
 
     {
         auto vector = GenerateSample<uint64_t>(200000, 1234, g_random_engine);
         test(vector);
+    }
+
+    {
+        std::vector<std::vector<int>> vector{{1}};
+        for (int i = 0; i < 100000; ++i) {
+            vector.emplace_back(std::vector<int>{});
+        }
+        vector.emplace_back(std::vector<int>{2, 1});
+
+        const auto start_ts = std::chrono::steady_clock::now();
+
+        FlattenedVector<int> flattened_vector(vector);
+        auto flattening_iter = flattened_vector.begin();
+        for (int i = 0; i < 100000; ++i) {
+            if (i & 1) {
+                --flattening_iter;
+                assert(*flattening_iter == 1);
+            } else {
+                ++flattening_iter;
+                assert(*flattening_iter == 2);
+            }
+        }
+        ++flattening_iter;
+        ++flattening_iter;
+        assert(*flattening_iter == 1);
+        --flattening_iter;
+        assert(*flattening_iter == 2);
+        --flattening_iter;
+        assert(*flattening_iter == 1);
+
+        const std::chrono::duration<double> elapsed_time = std::chrono::steady_clock::now() - start_ts;
+        assert(elapsed_time.count() < 0.5);
     }
 }
 
