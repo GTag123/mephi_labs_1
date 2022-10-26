@@ -1,5 +1,6 @@
 #include <vector>
 #include <queue>
+#include "iostream"
 
 /*
  * Напишите функцию, которая отсортирует целые числа и вернет их в виде вектора.

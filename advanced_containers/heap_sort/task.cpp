@@ -7,9 +7,10 @@ vector<int> HeapSort(const vector<int>& v) {
     for (int i: v){
         m.push(i);
     }
-    vector<int> f;
-    for (int i = 0; i < (int)m.size(); ++i) {
-        f.push_back(m.top());
+    vector<int> f(v.size());
+    for (int i = (int)v.size() - 1; i >= 0; i--) {
+        f[i] = m.top();
+//        std::cout << f[i] << " fdsg";
         m.pop();
     }
     return f;
