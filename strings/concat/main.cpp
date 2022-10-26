@@ -1,6 +1,7 @@
 #include <string>
 #include <cassert>
 #include "task.h"
+#include "iostream"
 
 void test(const char* lhs, const char* rhs) {
     char* result = concat(lhs, rhs);
