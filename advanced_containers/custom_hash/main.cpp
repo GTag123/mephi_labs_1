@@ -11,7 +11,6 @@ int main() {
         make_pair(SuperKey{"mephi", 1511, 0}, "value 3"),
         make_pair(SuperKey{"Good Bye", 0, 13.37}, "value 4"),
     };
-
     PopulateHashMap(hashMap, toAdd);
 
     assert(hashMap.size() == toAdd.size());

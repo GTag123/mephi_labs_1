@@ -10,8 +10,16 @@ struct SuperKey {
     bool operator==(const SuperKey& rhs) const {
         return this->StrPart == rhs.StrPart && this->IntPart == rhs.IntPart && this->FloatPart == rhs.FloatPart;
     }
+
 };
 
+namespace std {
+    template <>
+    struct hash<SuperKey>
+    {
+        std::size_t operator()(const SuperKey& k) const;
+    };
+}
 /*
  * Напишите хэш-функцию, реализовав специализацию шаблона std::hash для типа SuperKey
  * Напишите функцию PopulateHashMap, которая добавляет в hashMap пары ключ-значение из данного вектора toAdd
