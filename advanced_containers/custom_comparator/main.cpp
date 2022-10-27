@@ -1,6 +1,6 @@
 #include <cassert>
 #include "task.h"
-
+#include <iostream>
 using namespace std;
 
 int main() {
@@ -19,6 +19,7 @@ int main() {
 
     assert(map.size() == 6);
     for (std::map<SuperKey, string>::const_iterator it = next(map.begin()); it != map.end(); ++it) {
+        std::cout  << " . " << std::endl;
         assert(prev(it)->first.StrPart <= it->first.StrPart);
     }
 
