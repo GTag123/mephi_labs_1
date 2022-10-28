@@ -22,19 +22,14 @@ public:
 //        delete &prefixsum_;
 //    }
     T& operator *() const{
-        auto outerPos = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
-        long long innerPos = pos_ - *outerPos;
-
-        return data_[outerPos - prefixsum_.begin()][innerPos];
-
-//        auto it = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
-//        int id = distance(prefixsum_.begin(), it);
+        auto it = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
+        int id = distance(prefixsum_.begin(), it);
 //
 //        if (this->pos_ == 42) {
 //            cout << "42 *: " <<  data_[id][pos_ - prefixsum_[id]] << endl;
 //        }
-//
-//        return data_[id][pos_ - prefixsum_[id]];
+
+        return data_[id][pos_ - prefixsum_[id]];
     }
     bool operator ==(const FlatIter<T>& it2) const{
         if (this->pos_ == it2.pos_ && this->data_.size() == it2.data_.size() &&
