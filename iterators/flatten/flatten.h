@@ -112,7 +112,7 @@ public:
             return FlatIter<T>(this->data_, (int) prefixsum_.back(), prefixsum_);
         }
         FlatIter<T> ret = FlatIter<T>(this->data_, this->pos_ + value, prefixsum_);
-        cout << "operator + int: " << ret.pos_ << " thispos: " << this->pos_ << endl;
+//        cout << "operator + int: " << ret.pos_ << " thispos: " << this->pos_ << endl;
         return ret;
     }
     friend FlatIter<T> operator +(const int value, const FlatIter<T>& rhs) {
@@ -129,7 +129,7 @@ public:
         return rhs - value;
     }
     int operator -(const FlatIter<T> it2) const{ // попробовать убрать конст какая будет ошибка?
-        cout << "operator - int: " <<  this->pos_ << " " << it2.pos_ << endl;
+//        cout << "operator - int: " <<  this->pos_ << " " << it2.pos_ << endl;
         return this->pos_ - it2.pos_;
     }
 //    int end() {
