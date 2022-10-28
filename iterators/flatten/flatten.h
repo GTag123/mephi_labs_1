@@ -2,6 +2,7 @@
 #include "iostream"
 #include "vector"
 #include "string"
+#include "algorithm"
 //using namespace std;
 
 template<typename T>
@@ -22,10 +23,11 @@ public:
 //        delete &prefixsum_;
 //    }
     reference operator *() const{
-        auto it = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
+        auto it = std::upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
         int id = distance(prefixsum_.begin(), it);
 //
 //        if (this->pos_ == 42) {
+
 //            cout << "42 *: " <<  data_[id][pos_ - prefixsum_[id]] << endl;
 //        }
 
