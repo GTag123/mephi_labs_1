@@ -21,7 +21,7 @@ public:
 //    ~FlatIter(){
 //        delete &prefixsum_;
 //    }
-    T& operator *() const{
+    reference operator *() const{
         auto it = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
         int id = distance(prefixsum_.begin(), it);
 //
