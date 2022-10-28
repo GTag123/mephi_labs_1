@@ -61,7 +61,7 @@ void TestProperties() {
     {
         assert(sizeof(FlattenedVector<double>) <= 40);
         assert(sizeof(FlattenedVector<TestData>) <= 40);
-        cout << sizeof(std::declval<FlattenedVector<TestData>>().begin()) << endl;
+//        cout << sizeof(std::declval<FlattenedVector<TestData>>().begin()) << endl;
         assert(sizeof(std::declval<FlattenedVector<TestData>>().begin()) <= 32);
         assert(sizeof(std::declval<FlattenedVector<TestData>>().end()) <= 32);
     }
@@ -90,8 +90,8 @@ void TestProperties() {
         const auto it_a = flattened_vector.begin() + 11;
         const auto it_b = flattened_vector.begin() + 42;
         const auto diff = it_b - it_a;
-        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
-        cout << diff << endl;
+//        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
+//        cout << diff << endl;
         assert(diff == 42 - 11);
 
         assert(it_a <= it_b);
@@ -100,7 +100,7 @@ void TestProperties() {
 
         assert((it_a + diff) == (diff + it_a));
         assert((it_a + 0) == it_a);
-        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
+//        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
         assert(it_a[diff] == *it_b);
 
         [diff](auto a, auto b) {

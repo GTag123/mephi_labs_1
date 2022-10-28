@@ -2,22 +2,22 @@
 #include "iostream"
 #include "vector"
 #include "string"
-using namespace std;
+//using namespace std;
 
 template<typename T>
 class FlatIter {
 private:
     int pos_;
-    vector<vector<T>>& data_;
-    vector<int>& prefixsum_;
+    std::vector<std::vector<T>>& data_;
+    std::vector<int>& prefixsum_;
 public:
-    using iterator_category = random_access_iterator_tag;
+    using iterator_category = std::random_access_iterator_tag;
     using value_type = T;
     using reference = T&;
     using pointer = T*;
     using difference_type = ssize_t;
 
-    FlatIter<T>(vector<vector<T>>& data, int pos, vector<int>& ps): pos_(pos), data_(data), prefixsum_(ps){};
+    FlatIter<T>(std::vector<std::vector<T>>& data, int pos, std::vector<int>& ps): pos_(pos), data_(data), prefixsum_(ps){};
 //    ~FlatIter(){
 //        delete &prefixsum_;
 //    }
@@ -136,7 +136,7 @@ public:
 template<typename T>
 class FlattenedVector {
 public:
-    FlattenedVector(vector<vector<T>>& vec): vec_(vec){
+    FlattenedVector(std::vector<std::vector<T>>& vec): vec_(vec){
         prefixsum_.push_back(0);
         for (int i = 1; i < (int) vec_.size() + 1; ++i) {
             prefixsum_.push_back(prefixsum_[(int)prefixsum_.size() - 1] + (int) vec_[i-1].size());
@@ -153,6 +153,6 @@ public:
     }
 
 private:
-    vector<int> prefixsum_;
-    vector<vector<T>>& vec_;
+    std::vector<int> prefixsum_;
+    std::vector<std::vector<T>>& vec_;
 };
