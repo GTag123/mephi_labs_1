@@ -22,7 +22,7 @@ public:
 //        delete &prefixsum_;
 //    }
     T& operator *() const{
-        auto outerPos = std::upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
+        auto outerPos = upper_bound(prefixsum_.begin(), prefixsum_.end(), pos_) - 1;
         long long innerPos = pos_ - *outerPos;
 
         return data_[outerPos - prefixsum_.begin()][innerPos];
