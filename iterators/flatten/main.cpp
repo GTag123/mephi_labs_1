@@ -61,6 +61,7 @@ void TestProperties() {
     {
         assert(sizeof(FlattenedVector<double>) <= 40);
         assert(sizeof(FlattenedVector<TestData>) <= 40);
+        std::cout << "11" << std::endl;
 //        cout << sizeof(std::declval<FlattenedVector<TestData>>().begin()) << endl;
         assert(sizeof(std::declval<FlattenedVector<TestData>>().begin()) <= 32);
         assert(sizeof(std::declval<FlattenedVector<TestData>>().end()) <= 32);
@@ -77,6 +78,7 @@ void TestProperties() {
     }
 
     {
+        std::cout << "12" << std::endl;
         auto vector = GenerateSample<int>(100, 10, g_random_engine);
         const auto expected = Flatten(vector);
 
@@ -93,7 +95,7 @@ void TestProperties() {
 //        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
 //        cout << diff << endl;
         assert(diff == 42 - 11);
-
+        std::cout << "13" << std::endl;
         assert(it_a <= it_b);
         assert(it_b != it_a);
         assert(it_b > it_a);
@@ -102,7 +104,7 @@ void TestProperties() {
         assert((it_a + 0) == it_a);
 //        cout << "it_a[diff]: " << it_a[diff] << ", *it_b: " << *it_b << endl;
         assert(it_a[diff] == *it_b);
-
+        std::cout << "14" << std::endl;
         [diff](auto a, auto b) {
             assert((a += diff) == b);
         }(it_a, it_b);
@@ -124,7 +126,9 @@ void TestProperties() {
         [diff](auto a, auto b) {
             assert((a + (diff - 1)) == (--b));
         }(it_a, it_b);
+        std::cout << "15" << std::endl;
     }
+    std::cout << "16" << std::endl;
 }
 
 void TestSimple() {
@@ -218,14 +222,16 @@ void TestModify() {
 }
 
 void TestStress() {
+    std::cout << "51" << std::endl;
     auto test = [](std::vector<std::vector<uint64_t>> vector) {
         const auto flattened = Flatten(vector);
         const auto size = flattened.size();
 
         const auto start_ts = std::chrono::steady_clock::now();
-
+        std::cout << "52" << std::endl;
         FlattenedVector<uint64_t> flattened_vector(vector);
         auto flattening_iter = flattened_vector.begin();
+        std::cout << "521" << std::endl;
         for (int i = 0, pos = 0; i < 100000; ++i) {
             assert(std::distance(flattened_vector.begin(), flattening_iter) == pos);
             int new_pos = 0;
@@ -240,7 +246,7 @@ void TestStress() {
             pos = new_pos;
             assert(flattened[pos] == *flattening_iter);
         }
-
+        std::cout << "53" << std::endl;
         const std::chrono::duration<double> elapsed_time = std::chrono::steady_clock::now() - start_ts;
         assert(elapsed_time.count() < 0.5);
     };
@@ -261,7 +267,7 @@ void TestStress() {
             vector.emplace_back(std::vector<int>{});
         }
         vector.emplace_back(std::vector<int>{2, 1});
-
+        std::cout << "54" << std::endl;
         const auto start_ts = std::chrono::steady_clock::now();
 
         FlattenedVector<int> flattened_vector(vector);
@@ -282,7 +288,7 @@ void TestStress() {
         assert(*flattening_iter == 2);
         --flattening_iter;
         assert(*flattening_iter == 1);
-
+        std::cout << "55" << std::endl;
         const std::chrono::duration<double> elapsed_time = std::chrono::steady_clock::now() - start_ts;
         assert(elapsed_time.count() < 0.5);
     }
@@ -290,9 +296,14 @@ void TestStress() {
 
 int main() {
     TestProperties();
+    std::cout << "1" << std::endl;
     TestSimple();
+    std::cout << "2" << std::endl;
     TestEmpty();
+    std::cout << "3"<< std::endl;
     TestModify();
+    std::cout << "4"<< std::endl;
     TestStress();
+    std::cout << "5"<< std::endl;
     return 0;
 }
