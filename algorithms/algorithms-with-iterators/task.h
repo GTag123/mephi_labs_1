@@ -39,9 +39,15 @@ void Merge(InputIt1 first1, InputIt1 last1, InputIt2 first2, InputIt2 last2, Out
 class FibonacciRange {
 public:
 
-    class Iterator : public std::iterator<std::input_iterator_tag, uint64_t> {
+    class Iterator {
         friend class FibonacciRange;
     public:
+        using value_type = uint64_t;
+        using difference_type = ptrdiff_t;
+        using pointer = value_type*;
+        using reference = value_type&;
+        using iterator_category = std::input_iterator_tag;
+
         value_type operator *() const {
             // разыменование итератора -- доступ к значению
         }
