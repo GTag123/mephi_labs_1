@@ -7,5 +7,4 @@ void ReverseList(std::list<int>& l) {
         l2.push_back(*b++);
     }
     l = l2;
-
 }

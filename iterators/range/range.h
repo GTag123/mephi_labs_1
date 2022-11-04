@@ -29,10 +29,10 @@ public:
         return old;
     }
 
-    friend RIter& operator+(int64_t rhs, RIter& lhs){
-        lhs.curr_ += rhs*lhs.stp_;
-        return lhs;
-    }
+//    friend RIter operator+(int64_t rhs, RIter& lhs){
+//        lhs.curr_ += rhs*lhs.stp_;
+//        return lhs;
+//    }
     friend bool operator!=(const RIter& it1, const RIter& it2){
         if (it1.curr_ == it2.curr_ && it1.stp_ == it2.stp_){
 
@@ -66,10 +66,10 @@ public:
             end_(end),
             step_(step){};
 
-    [[nodiscard]] const RIter begin() const {
+    [[nodiscard]] RIter begin() const {
         return RIter(step_, start_, end_);
     }
-    [[nodiscard]] const RIter end() const {
+    [[nodiscard]] RIter end() const {
         return RIter(step_, end_, end_);
     }
 
