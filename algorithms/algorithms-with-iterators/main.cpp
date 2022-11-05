@@ -28,6 +28,10 @@ void TestMerge(vector<int> vec1, vector<int> vec2) {
 
     vector<int> expectedResult(vec1.size() + vec2.size());
     std::merge(vec1.begin(), vec1.end(), vec2.begin(), vec2.end(), expectedResult.begin());
+//    cout << result.size() << " " << expectedResult.size() << endl;
+//    for (int i = 0; i < (int)result.size(); ++i) {
+//        cout << result[i] << " " << expectedResult[i] << endl;
+//    }
 
     assert(result == expectedResult);
 }
@@ -39,10 +43,15 @@ void TestFibonacciRange() {
     assert(std::is_sorted(r.begin(), r.end()));
 
     vector<uint64_t> fibonacciVec(r.begin(), r.end());
+
     assert(fibonacciVec == vector<uint64_t>({1, 2, 3, 5, 8, 13, 21, 34, 55, 89}));
 
     vector<uint64_t> doubledFibonacci(r.size());
     Transform(r.begin(), r.end(), doubledFibonacci.begin(), [](uint64_t fib){return fib * 2;});
+//    cout << doubledFibonacci.size() << endl;
+//    for (int i = 0; i < (int)doubledFibonacci.size(); ++i) {
+//        cout << doubledFibonacci[i] << endl;
+//    }
     assert(doubledFibonacci == vector<uint64_t>({2, 4, 6, 10, 16, 26, 42, 68, 110, 178}));
 }
 
