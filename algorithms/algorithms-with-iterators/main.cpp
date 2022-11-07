@@ -9,7 +9,7 @@ using namespace std;
 
 void TestPartition(vector<int> vec, std::function<bool(int)> predicate) {
     Partition(vec.begin(), vec.end(), predicate);
-    is_partitioned(vec.begin(), vec.end(), predicate);
+    assert(is_partitioned(vec.begin(), vec.end(), predicate));
 }
 
 void TestTransform(vector<int> vec, std::function<bool(int)> operation) {
