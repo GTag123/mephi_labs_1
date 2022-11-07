@@ -16,7 +16,7 @@ public:
     };
 
     void Put(const K& key, const V& value){
-        if (pointers.contains(key)) {
+        if (pointers.find(key) != pointers.end()) {
             size--;
             data.erase(pointers[key]);
         } else if (size == maxsize){
@@ -30,7 +30,7 @@ public:
     };
 
     bool Get(const K& key, V* value){
-        if (!pointers.contains(key)) return false; // тут пизда
+        if (pointers.find(key) == pointers.end()) return false; // тут пизда
         *value = (*pointers[key]).first;
         data.erase(pointers[key]);
         data.push_back({*value, key});

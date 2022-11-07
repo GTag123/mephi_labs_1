@@ -2,7 +2,7 @@
 #include <cassert>
 #include <vector>
 #include <algorithm>
-#include <functional>
+#include <functionalu
 
 using namespace std;
 
@@ -57,6 +57,7 @@ void TestFibonacciRange() {
 
 
 int main () {
+    cout << 123 << endl;
     TestPartition({1, 2, 3, 4, 5, 6, 7, 8}, [](int a){return a % 2;});
     TestPartition({1, 1, 1, 1, 1, 1, 1, 1}, [](int a){return a % 2;});
     TestPartition({2, 2, 2, 2, 1, 1, 1, 1}, [](int a){return a % 2;});
