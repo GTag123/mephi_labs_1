@@ -40,8 +40,9 @@ void TestProperties() {
     assert(cache.Get(key, &result));
     assert(result == TestValue{"value"});
 
+
     cache.Put({-1, -2}, {"vz"});
-    assert(!cache.Get(key, &result));
+    assert(!cache.Get(key, &result)); // тута
     assert(cache.Get({-1, -2}, &result));
     assert(result == TestValue{"vz"});
 }
@@ -80,6 +81,7 @@ void TestEviction() {
     assert(cache.Get(2, &result));
 
     cache.Put(4, "d");
+    cout << "erased 3" << endl;
     assert(!cache.Get(3, &result));
     assert(cache.Get(2, &result));
     assert(result == "b");
