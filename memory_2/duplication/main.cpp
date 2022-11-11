@@ -3,6 +3,7 @@
 #include <cassert>
 #include <memory>
 #include <string>
+#include <vector>
 
 void TestDuplication() {
     const auto first = std::make_shared<std::string>("first");
