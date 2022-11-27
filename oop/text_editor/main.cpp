@@ -8,23 +8,6 @@ void ApplyMultiple(TextEditor& editor, const CommandPtr& command, size_t times) 
     }
 }
 
-// shortcuts
-using CommandBuilder::Type::MoveCursorLeft;
-using CommandBuilder::Type::MoveCursorRight;
-using CommandBuilder::Type::MoveCursorUp;
-using CommandBuilder::Type::MoveCursorDown;
-using CommandBuilder::Type::SelectText;
-using CommandBuilder::Type::InsertText;
-using CommandBuilder::Type::DeleteText;
-using CommandBuilder::Type::CopyText;
-using CommandBuilder::Type::PasteText;
-using CommandBuilder::Type::UppercaseText;
-using CommandBuilder::Type::LowercaseText;
-using CommandBuilder::Type::MoveToEnd;
-using CommandBuilder::Type::MoveToStart;
-using CommandBuilder::Type::DeleteWord;
-using CommandBuilder::Type::Macro;
-
 CommandBuilder CB(CommandBuilder::Type t) {
     return CommandBuilder().WithType(t);
 }
@@ -109,7 +92,7 @@ void TestCopyPaste() {
     assert(editor.GetCharUnderCursor() == 'V');
 
     CommandPtr macroCommand = CommandBuilder()
-            .WithType(Macro)
+            .WithType(CommandBuilder::Type::Macro)
             .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
             .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
             .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
@@ -147,7 +130,7 @@ void TestLogging() {
     assert(editor.GetText() == "quick brown fox jumps\nover the lazy dog");
 
     CommandPtr macroCommand = CommandBuilder()
-            .WithType(Macro)
+            .WithType(CommandBuilder::Type::Macro)
             .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
             .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
             .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
