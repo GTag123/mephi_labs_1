@@ -35,25 +35,25 @@ void TestOneLine() {
     assert(editor.GetCursorPosition() == 0);
     assert(editor.GetCharUnderCursor() == 0);
 
-    editor.ApplyCommand(CB(InsertText).Text("Hello world").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text("Hello world").build());
     assert(editor.GetText() == "Hello world");
     assert(editor.GetCursorPosition() == 11);
 
-    ApplyMultiple(editor, CB(MoveCursorLeft).build(), 6);
+    ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorLeft).build(), 6);
     assert(editor.GetCursorPosition() == 5);
     assert(editor.GetCharUnderCursor() == ' ');
 
-    editor.ApplyCommand(CB(InsertText).Text(",").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text(",").build());
     assert(editor.GetText() == "Hello, world");
     assert(editor.GetCursorPosition() == 6);
     assert(editor.GetCharUnderCursor() == ' ');
 
-    editor.ApplyCommand(CB(MoveToEnd).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).build());
     assert(editor.GetText() == "Hello, world");
     assert(editor.GetCursorPosition() == 12);
     assert(editor.GetCharUnderCursor() == 0);
 
-    editor.ApplyCommand(CB(InsertText).Text("!").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text("!").build());
     assert(editor.GetText() == "Hello, world!");
     assert(editor.GetCursorPosition() == 13);
     assert(editor.GetCharUnderCursor() == 0);
@@ -62,58 +62,58 @@ void TestOneLine() {
 void TestCopyPaste() {
     TextEditor editor;
 
-    editor.ApplyCommand(CB(InsertText).Text("Vasya was here\n").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text("Vasya was here\n").build());
     assert(editor.GetText() == "Vasya was here\n");
     assert(editor.GetCursorPosition() == 15);
     assert(editor.GetCharUnderCursor() == 0);
 
-    editor.ApplyCommand(CB(MoveCursorUp).build());
-    editor.ApplyCommand(CB(SelectText).SelectionSize(15).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).SelectionSize(15).build());
     assert(editor.GetSelection() == std::make_pair((size_t)0, (size_t)15));
     assert(editor.GetCharUnderCursor() == 'V');
 
-    editor.ApplyCommand(CB(CopyText).build());
-    editor.ApplyCommand(CB(SelectText).SelectionSize(15).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).SelectionSize(15).build());
     assert(editor.GetClipboard() == editor.GetText());
 
-    editor.ApplyCommand(CB(PasteText).build());  // paste in place of selection
-    editor.ApplyCommand(CB(MoveCursorUp).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).build());  // paste in place of selection
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
     assert(editor.GetClipboard() == editor.GetText());
     assert(editor.GetCharUnderCursor() == 'V');
     assert(editor.GetCursorPosition() == 0);
     assert(!editor.HasSelection());
 
-    editor.ApplyCommand(CB(PasteText).build());  // paste on position 0
+    editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).build());  // paste on position 0
     assert(editor.GetText() == "Vasya was here\nVasya was here\n");
     assert(editor.GetCharUnderCursor() == 'V');
     assert(editor.GetCursorPosition() == 15);
     assert(!editor.HasSelection());
 
-    editor.ApplyCommand(CB(MoveToEnd).build());
-    editor.ApplyCommand(CB(InsertText).Text("\nIvan is cool").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text("\nIvan is cool").build());
     assert(editor.GetText() == "Vasya was here\nVasya was here\nIvan is cool\n");
     assert(editor.GetCursorPosition() == editor.GetText().size() - 1);
     assert(editor.GetCharUnderCursor() == '\n');
 
-    editor.ApplyCommand(CB(MoveCursorUp).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
     assert(editor.GetCursorPosition() == 27);
     assert(editor.GetCharUnderCursor() == 'r');
 
-    ApplyMultiple(editor, CB(MoveCursorUp).build(), 8);
+    ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorUp).build(), 8);
     assert(editor.GetText() == "Vasya was here\nVasya was here\nIvan is cool\n");
     assert(editor.GetCursorPosition() == 12);
     assert(editor.GetCharUnderCursor() == 'r');
 
-    editor.ApplyCommand(CB(MoveToStart).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).build());
     assert(editor.GetCursorPosition() == 0);
     assert(editor.GetCharUnderCursor() == 'V');
 
     CommandPtr macroCommand = CommandBuilder()
             .WithType(Macro)
-            .AddSubcommand(CB(DeleteWord).build())
-            .AddSubcommand(CB(InsertText).Text("Fedor").build())
-            .AddSubcommand(CB(MoveCursorDown).build())
-            .AddSubcommand(CB(MoveToStart).build())
+            .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
+            .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveToStart).build())
             .build();
 
     ApplyMultiple(editor, macroCommand, 3);
@@ -124,34 +124,34 @@ void TestLogging() {
     TextEditor editor;
     std::stringstream logStream;
 
-    editor.ApplyCommand(CB(InsertText).LogTo(logStream).Text("Quick brown fox jumps\nover the lazy dog").build());
-    editor.ApplyCommand(CB(MoveCursorUp).LogTo(logStream).build());
-    editor.ApplyCommand(CB(MoveToStart).LogTo(logStream).build());
-    editor.ApplyCommand(CB(MoveCursorDown).LogTo(logStream).build());
-    editor.ApplyCommand(CB(MoveToEnd).LogTo(logStream).build());
-    editor.ApplyCommand(CB(MoveToStart).LogTo(logStream).build());
-    editor.ApplyCommand(CB(SelectText).LogTo(logStream).SelectionSize(4).build());
-    editor.ApplyCommand(CB(CopyText).LogTo(logStream).build());
-    editor.ApplyCommand(CB(DeleteWord).LogTo(logStream).build());
-    editor.ApplyCommand(CB(PasteText).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).LogTo(logStream).Text("Quick brown fox jumps\nover the lazy dog").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorDown).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(4).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::DeleteWord).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).LogTo(logStream).build());
 
     assert(editor.GetText() == "Quick brown fox jumps\nover the lazy dog");
 
-    ApplyMultiple(editor, CB(MoveCursorLeft).LogTo(logStream).build(), 26);
-    editor.ApplyCommand(CB(SelectText).LogTo(logStream).SelectionSize(5).build());
-    editor.ApplyCommand(CB(UppercaseText).LogTo(logStream).build());
+    ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorLeft).LogTo(logStream).build(), 26);
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::UppercaseText).LogTo(logStream).build());
     assert(editor.GetText() == "QUICK brown fox jumps\nover the lazy dog");
 
-    editor.ApplyCommand(CB(SelectText).LogTo(logStream).SelectionSize(5).build());
-    editor.ApplyCommand(CB(LowercaseText).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::LowercaseText).LogTo(logStream).build());
     assert(editor.GetText() == "quick brown fox jumps\nover the lazy dog");
 
     CommandPtr macroCommand = CommandBuilder()
             .WithType(Macro)
-            .AddSubcommand(CB(DeleteWord).build())
-            .AddSubcommand(CB(InsertText).Text("Fedor").build())
-            .AddSubcommand(CB(MoveCursorDown).build())
-            .AddSubcommand(CB(MoveToStart).build())
+            .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
+            .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveToStart).build())
             .LogTo(logStream)
             .build();
 
