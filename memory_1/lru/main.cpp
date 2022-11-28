@@ -1,11 +1,12 @@
 #include "lru.h"
-
+#include "iostream"
 #include <cassert>
 #include <chrono>
 #include <random>
 #include <string>
 #include <vector>
 
+using namespace std;
 struct TestKey {
     int first;
     int second;

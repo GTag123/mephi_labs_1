@@ -5,11 +5,7 @@
 
 using namespace std;
 
-class FibonacciRange {
-public:
-    vector<uint64_t> fib;
-
-    class Iterator {
+class Iterator {
         friend class FibonacciRange;
         vector<uint64_t>& fib;
         int curr;
@@ -44,7 +40,7 @@ public:
             return false;
         }
         bool operator !=(const Iterator& rhs) const {
-            return !operator==(rhs);
+            return !(operator==(rhs));
         }
 
         bool operator <(const Iterator& rhs) const {
@@ -58,6 +54,9 @@ public:
 
     };
 
+class FibonacciRange {
+public:
+    vector<uint64_t> fib;
     FibonacciRange(size_t amount) {
         fib.push_back(1);
         fib.push_back(2);
@@ -83,7 +82,7 @@ public:
 
 
 
-bool operator !=(vector<uint64_t>::iterator& lhs, FibonacciRange::Iterator& rhs) {
+bool operator !=(vector<uint64_t>::iterator& lhs, Iterator& rhs) {
     return *lhs == *rhs;
 }
 

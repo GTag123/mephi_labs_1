@@ -26,13 +26,10 @@ public:
 class TimeMeasurer {
 public:
     std::iostream& outstream;
-    std::chrono::time_point<std::chrono::steady_clock> begin;
-    TimeMeasurer(std::iostream& output): outstream(output) {
-        begin = std::chrono::steady_clock::now();
-    }
+    std::chrono::time_point<std::chrono::steady_clock> beg;
+    TimeMeasurer(std::iostream& output): outstream(output), beg(std::chrono::steady_clock::now()) {}
     ~TimeMeasurer(){
-//        std::cout << "Elapsed time: " << (std::chrono::steady_clock::now() - begin).count() << std::endl;
-        outstream << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>((std::chrono::steady_clock::now() - begin)).count() << std::endl;
+        outstream << "Elapsed time: " << std::chrono::duration_cast<std::chrono::milliseconds>((std::chrono::steady_clock::now() - beg)).count() << std::endl;
     }
 
 };
