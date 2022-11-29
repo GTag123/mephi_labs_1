@@ -155,7 +155,6 @@ private:
 class CommandVisitor {
 public:
     virtual ~CommandVisitor() = default;
-
     virtual void VisitMoveCursorLeftCommand(MoveCursorLeftCommand& command) = 0;
     virtual void VisitMoveCursorRightCommand(MoveCursorRightCommand& command) = 0;
     virtual void VisitMoveCursorUpCommand(MoveCursorUpCommand& command) = 0;

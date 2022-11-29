@@ -1,6 +1,7 @@
 #include "text_editor.h"
 #include "task.h"
-
+#include "iostream"
+using namespace std;
 void TextEditor::ApplyCommand(CommandPtr command) {
     command->Apply(buffer_, cursorPosition_, clipboard_, *this);
 }
@@ -36,6 +37,7 @@ const std::string& TextEditor::GetText() const {
 }
 
 size_t TextEditor::GetCursorPosition() const {
+    cout << "current cursor pos: " << cursorPosition_ << endl;
     return cursorPosition_;
 }
 
