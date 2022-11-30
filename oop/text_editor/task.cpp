@@ -341,7 +341,7 @@ class MoveToStartCommand : public ICommand {
     void Apply(std::string &buffer, size_t &cursorPosition, std::string &clipboard, TextEditor &editor) override{
         cout << "Apply MoveToStart" << endl;
         cout << "buffer before: " << buffer << ":   cursor pos: " << cursorPosition << endl;
-        while (buffer[cursorPosition - 1] != '\n' && cursorPosition > 0){
+        while (cursorPosition > 0 && buffer[cursorPosition - 1] != '\n'){
             cursorPosition--;
         }
         cout << "buffer after: " << buffer << ":   cursor pos: " << cursorPosition << endl << endl;
