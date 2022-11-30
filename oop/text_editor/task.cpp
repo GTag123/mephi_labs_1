@@ -1,9 +1,13 @@
 #include "task.h"
 #include "logged_command_wrapper.h"
 #include "iostream"
+
+
 using namespace std;
 
-CommandBuilder::CommandBuilder() {}
+CommandBuilder::CommandBuilder() {
+    this->logStreamPtr_ = NULL; // мб костыль
+}
 
 CommandBuilder &CommandBuilder::Text(std::string text) {
     this->text_ = text;
@@ -58,7 +62,7 @@ void CommandLoggerVisitor::VisitSelectCommand(SelectTextCommand& command) {
 }
 
 void CommandLoggerVisitor::VisitInsertTextCommand(InsertTextCommand& command) {
-    this->logStream_ << "o";
+    this->logStream_ << "i";
 }
 
 void CommandLoggerVisitor::VisitDeleteTextCommand(DeleteTextCommand& command) {
@@ -90,6 +94,7 @@ void CommandLoggerVisitor::VisitMoveToStartCommand(MoveToStartCommand& command) 
 }
 
 void CommandLoggerVisitor::VisitDeleteWordCommand(DeleteWordCommand& command) {
+    cout << "хуй" << endl;
     this->logStream_ << "dE";
 }
 
@@ -127,7 +132,7 @@ class MoveCursorUpCommand : public ICommand {
         cout << "Apply MoveCursorUpCommand" << endl;
         cout << "buffer before: " << buffer << ":   cursor pos: " << cursorPosition << endl;
         int i = cursorPosition;
-        cout << "cursor: " << cursorPosition << "size buff: " << buffer.size() << endl;
+        cout << "cursor: " << cursorPosition << " size buff: " << buffer.size() << endl;
         while(i > 0 && buffer[i - 1] != '\n'){
             i--; // i будет указывать на начало строки
         }
@@ -195,7 +200,7 @@ public:
 
     void Apply(std::string &buffer, size_t &cursorPosition, std::string &clipboard, TextEditor &editor) override{
         cout << "Apply SelectTextCommand" << endl;
-        editor.SelectText(cursorPosition, SelectionSize_);
+        editor.SelectText(cursorPosition, cursorPosition + SelectionSize_);
         cout << "Selection pos: " << editor.GetSelection().first << " " << editor.GetSelection().second << endl;
 //        cursorPosition += SelectionSize_; // мб не надо
     }
@@ -282,6 +287,17 @@ class PasteTextCommand : public ICommand {
 
 /* Привести выделенный текст в ВЕРХНИЙ регистр */
 class UppercaseTextCommand : public ICommand {
+    void Apply(std::string &buffer, size_t &cursorPosition, std::string &clipboard, TextEditor &editor) override{
+        cout << "Apply uppercase" << endl;
+        cout << "buffer before: " << buffer << ": cursor pos: " << cursorPosition << endl;
+        if (editor.HasSelection()){
+            for (int i = (int) editor.GetSelection().first; i <= (int) editor.GetSelection().second; ++i) {
+                buffer[i] = toupper(buffer[i]);
+            }
+            editor.UnselectText();
+        }
+        cout << "buffer after: " << buffer << ": cursor pos: " << cursorPosition << endl;
+    }
     void AcceptVisitor(CommandVisitor &visitor) override{
         visitor.VisitUppercaseTextCommand(*this);
     }
@@ -289,7 +305,17 @@ class UppercaseTextCommand : public ICommand {
 
 /* Привести выделенный текст в нижний регистр */
 class LowercaseTextCommand : public ICommand {
-
+    void Apply(std::string &buffer, size_t &cursorPosition, std::string &clipboard, TextEditor &editor) override{
+        cout << "Apply lowercase" << endl;
+        cout << "buffer before: " << buffer << ": cursor pos: " << cursorPosition << endl;
+        if (editor.HasSelection()){
+            for (int i = (int) editor.GetSelection().first; i <= (int) editor.GetSelection().second; ++i) {
+                buffer[i] = tolower(buffer[i]);
+            }
+            editor.UnselectText();
+        }
+        cout << "buffer after: " << buffer << ": cursor pos: " << cursorPosition << endl;
+    }
     void AcceptVisitor(CommandVisitor &visitor) override{
         visitor.VisitLowercaseTextCommand(*this);
     }
@@ -369,46 +395,118 @@ CommandPtr CommandBuilder::build() {
     // todo: сбросить селект во всех командах
     switch (this->type_) {
         case CommandBuilder::Type::MoveCursorLeft:
-            return make_shared<MoveCursorLeftCommand>(MoveCursorLeftCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveCursorLeftCommand>(MoveCursorLeftCommand())));
+            } else
+                return make_shared<MoveCursorLeftCommand>(MoveCursorLeftCommand());
             break;
         case CommandBuilder::Type::InsertText:
-            return make_shared<InsertTextCommand>(InsertTextCommand(this->text_));
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<InsertTextCommand>(InsertTextCommand(this->text_))));
+            } else
+                return make_shared<InsertTextCommand>(InsertTextCommand(this->text_));
             break;
         case CommandBuilder::Type::MoveToEnd:
-            return make_shared<MoveToEndCommand>(MoveToEndCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveToEndCommand>(MoveToEndCommand())));
+            } else
+                return make_shared<MoveToEndCommand>(MoveToEndCommand());
             break;
         case Type::MoveCursorRight:
-            return make_shared<MoveCursorRightCommand>(MoveCursorRightCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveCursorRightCommand>(MoveCursorRightCommand())));
+            } else
+                return make_shared<MoveCursorRightCommand>(MoveCursorRightCommand());
             break;
         case Type::MoveCursorUp:
-            return make_shared<MoveCursorUpCommand>(MoveCursorUpCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveCursorUpCommand>(MoveCursorUpCommand())));
+            } else
+                return make_shared<MoveCursorUpCommand>(MoveCursorUpCommand());
             break;
         case Type::MoveCursorDown:
-            return make_shared<MoveCursorDownCommand>(MoveCursorDownCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveCursorDownCommand>(MoveCursorDownCommand())));
+            } else
+                return make_shared<MoveCursorDownCommand>(MoveCursorDownCommand());
             break;
         case Type::SelectText:
-            return make_shared<SelectTextCommand>(SelectTextCommand((int)this->selectionSize_));
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<SelectTextCommand>(SelectTextCommand((int)this->selectionSize_))));
+            } else
+                return make_shared<SelectTextCommand>(SelectTextCommand((int)this->selectionSize_));
             break;
         case Type::DeleteText:
             break;
         case Type::CopyText:
-            return make_shared<CopyTextCommand>(CopyTextCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<CopyTextCommand>(CopyTextCommand())));
+            } else
+                return make_shared<CopyTextCommand>(CopyTextCommand());
             break;
         case Type::PasteText:
-            return make_shared<PasteTextCommand>(PasteTextCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<PasteTextCommand>(PasteTextCommand())));
+            } else
+                return make_shared<PasteTextCommand>(PasteTextCommand());
             break;
         case Type::UppercaseText:
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<UppercaseTextCommand>(UppercaseTextCommand())));
+            } else
+                return make_shared<UppercaseTextCommand>(UppercaseTextCommand());
             break;
         case Type::LowercaseText:
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<LowercaseTextCommand>(LowercaseTextCommand())));
+            } else
+                return make_shared<LowercaseTextCommand>(LowercaseTextCommand());
             break;
         case Type::MoveToStart:
-            return make_shared<MoveToStartCommand>(MoveToStartCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MoveToStartCommand>(MoveToStartCommand())));
+            } else
+                return make_shared<MoveToStartCommand>(MoveToStartCommand());
             break;
         case Type::DeleteWord:
-            return make_shared<DeleteWordCommand>(DeleteWordCommand());
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<DeleteWordCommand>(DeleteWordCommand())));
+            } else
+                return make_shared<DeleteWordCommand>(DeleteWordCommand());
             break;
         case Type::Macro:
-            return make_shared<MacroCommand>(MacroCommand(std::move(this->subcommands_)));
+            if (this->logStreamPtr_ != NULL){
+                return make_shared<LoggedCommandWrapper>(
+                        LoggedCommandWrapper(*(this->logStreamPtr_),
+                                             make_shared<MacroCommand>(MacroCommand(std::move(this->subcommands_)))));
+            } else
+                return make_shared<MacroCommand>(MacroCommand(std::move(this->subcommands_)));
             break;
     }
     return nullptr;

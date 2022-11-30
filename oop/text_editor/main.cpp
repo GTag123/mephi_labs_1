@@ -128,27 +128,56 @@ void TestLogging() {
 
     editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).LogTo(logStream).Text("Quick brown fox jumps\nover the lazy dog").build());
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).LogTo(logStream).build());
+    cout << endl << "main.cpp 131 after MoveCursorUp, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    cout << endl << "main.cpp 133 after MoveToStart, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorDown).LogTo(logStream).build());
+    cout << endl << "main.cpp 135 after MoveCursorDown, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).LogTo(logStream).build());
+    cout << endl << "main.cpp 137 after MoveToEnd, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    cout << endl << "main.cpp 139 after MoveToStart, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(4).build());
+    cout << endl << "main.cpp 141 after SelectText, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).LogTo(logStream).build());
+    cout << endl << "main.cpp 143 after CopyText, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::DeleteWord).LogTo(logStream).build());
+    cout << endl << "main.cpp 145 after DeleteWord, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
+
     editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).LogTo(logStream).build());
+    cout << endl << "main.cpp 147 after PasteText, buffer\n:" << editor.GetText() << ":\ncursor pos: " << editor.GetCursorPosition() << endl << endl;
+
 
     cout << "main.cpp 140 GetText()\n:" << editor.GetText() << endl;
     assert(editor.GetText() == "Quick brown fox jumps\nover the lazy dog");
 
+
     ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorLeft).LogTo(logStream).build(), 26);
     editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
+
+    cout << "main.cpp 173 tut" << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::UppercaseText).LogTo(logStream).build());
     assert(editor.GetText() == "QUICK brown fox jumps\nover the lazy dog");
 
     editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
     editor.ApplyCommand(CB(CommandBuilder::Type::LowercaseText).LogTo(logStream).build());
     assert(editor.GetText() == "quick brown fox jumps\nover the lazy dog");
-
+    cout << "main.cpp 180 tut" << endl;
     CommandPtr macroCommand = CommandBuilder()
             .WithType(CommandBuilder::Type::Macro)
             .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
@@ -160,6 +189,9 @@ void TestLogging() {
 
     ApplyMultiple(editor, macroCommand, 2);
     assert(editor.GetText() == "Fedor brown fox jumps\nFedor the lazy dog");
+//    cout << "ПМИ СОСАТЬЬЬЬЬ!!!!!!!!!!!!!" << endl;
+    cout << logStream.str() << endl;
+
 
     assert(logStream.str() == "ik0j$0vydEphhhhhhhhhhhhhhhhhhhhhhhhhhvUvudEij0dEij0");
 }
