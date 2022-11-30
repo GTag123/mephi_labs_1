@@ -140,6 +140,8 @@ public:
      * Функция возвращает ссылку на *this, чтобы можно было объединять вызовы методов билдера в цепочку (fluent interface)
      */
     CommandBuilder& AddSubcommand(CommandPtr subcommand);
+    Type getType() const;
+
 private:
     Type type_;
     size_t selectionSize_;

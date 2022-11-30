@@ -56,18 +56,20 @@ void TestCopyPaste() {
     assert(editor.GetText() == "Vasya was here\n");
     assert(editor.GetCursorPosition() == 15);
     assert(editor.GetCharUnderCursor() == 0);
-
+    cout << "tut" << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
     editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).SelectionSize(15).build());
     assert(editor.GetSelection() == std::make_pair((size_t)0, (size_t)15));
     assert(editor.GetCharUnderCursor() == 'V');
-
+    cout << "tut2 64" << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).build());
     editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).SelectionSize(15).build());
     assert(editor.GetClipboard() == editor.GetText());
-
+    cout << "tut3 68" << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).build());  // paste in place of selection
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
+    cout << "main.cpp 71: getclipboard :" << editor.GetClipboard() << ":" << endl;
+    cout << "main.cpp 72: buffer :" << editor.GetText() << ":" << endl;
     assert(editor.GetClipboard() == editor.GetText());
     assert(editor.GetCharUnderCursor() == 'V');
     assert(editor.GetCursorPosition() == 0);
@@ -81,11 +83,15 @@ void TestCopyPaste() {
 
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).build());
     editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).Text("\nIvan is cool").build());
+    cout << "tut 86, GetText() :" << editor.GetText() << ":" << endl;
     assert(editor.GetText() == "Vasya was here\nVasya was here\nIvan is cool\n");
     assert(editor.GetCursorPosition() == editor.GetText().size() - 1);
     assert(editor.GetCharUnderCursor() == '\n');
-
+    cout << "main.cpp 90: cur pos: " << editor.GetCursorPosition() << " char: " << editor.GetCharUnderCursor() << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).build());
+    cout << "main.cpp 92: buffer\n:" << editor.GetText() << ":" << endl;
+    cout << "main.cpp 93: cur pos: " << editor.GetCursorPosition() << " char: " << editor.GetCharUnderCursor() << endl;
+
     assert(editor.GetCursorPosition() == 27);
     assert(editor.GetCharUnderCursor() == 'r');
 
@@ -93,11 +99,14 @@ void TestCopyPaste() {
     assert(editor.GetText() == "Vasya was here\nVasya was here\nIvan is cool\n");
     assert(editor.GetCursorPosition() == 12);
     assert(editor.GetCharUnderCursor() == 'r');
-
+    cout << "tut 102!!!!" << endl;
     editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).build());
     assert(editor.GetCursorPosition() == 0);
     assert(editor.GetCharUnderCursor() == 'V');
-
+    cout << "tut 106" << endl;
+    cout << "--------------------------MacroComands---------------------------" << endl;
+    cout << "main.cpp 107 GetText()\n:" << editor.GetText() << ":\nCursor pos: " << editor.GetCursorPosition() << endl;
+    // в реализации apply в классе макрокоманд нужно пройтись циклом и применить к каждому apply
     CommandPtr macroCommand = CommandBuilder()
             .WithType(CommandBuilder::Type::Macro)
             .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
@@ -107,53 +116,57 @@ void TestCopyPaste() {
             .build();
 
     ApplyMultiple(editor, macroCommand, 3);
+    cout << "main.cpp 118 GetText()\n:" << editor.GetText() << ":\nCursor pos: " << editor.GetCursorPosition() << endl;
     assert(editor.GetText() == "Fedor was here\nFedor was here\nFedor is cool\n");
+    cout << endl << endl << endl << endl;
 }
-//
-//void TestLogging() {
-//    TextEditor editor;
-//    std::stringstream logStream;
-//
-//    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).LogTo(logStream).Text("Quick brown fox jumps\nover the lazy dog").build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorDown).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(4).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::DeleteWord).LogTo(logStream).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).LogTo(logStream).build());
-//
-//    assert(editor.GetText() == "Quick brown fox jumps\nover the lazy dog");
-//
-//    ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorLeft).LogTo(logStream).build(), 26);
-//    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::UppercaseText).LogTo(logStream).build());
-//    assert(editor.GetText() == "QUICK brown fox jumps\nover the lazy dog");
-//
-//    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
-//    editor.ApplyCommand(CB(CommandBuilder::Type::LowercaseText).LogTo(logStream).build());
-//    assert(editor.GetText() == "quick brown fox jumps\nover the lazy dog");
-//
-//    CommandPtr macroCommand = CommandBuilder()
-//            .WithType(CommandBuilder::Type::Macro)
-//            .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
-//            .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
-//            .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
-//            .AddSubcommand(CB(CommandBuilder::Type::MoveToStart).build())
-//            .LogTo(logStream)
-//            .build();
-//
-//    ApplyMultiple(editor, macroCommand, 2);
-//    assert(editor.GetText() == "Fedor brown fox jumps\nFedor the lazy dog");
-//
-//    assert(logStream.str() == "ik0j$0vydEphhhhhhhhhhhhhhhhhhhhhhhhhhvUvudEij0dEij0");
-//}
+
+void TestLogging() {
+    cout << "Debug TestLogging" << endl << endl;
+    TextEditor editor;
+    std::stringstream logStream;
+
+    editor.ApplyCommand(CB(CommandBuilder::Type::InsertText).LogTo(logStream).Text("Quick brown fox jumps\nover the lazy dog").build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorUp).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveCursorDown).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToEnd).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::MoveToStart).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(4).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::CopyText).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::DeleteWord).LogTo(logStream).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::PasteText).LogTo(logStream).build());
+
+    cout << "main.cpp 140 GetText()\n:" << editor.GetText() << endl;
+    assert(editor.GetText() == "Quick brown fox jumps\nover the lazy dog");
+
+    ApplyMultiple(editor, CB(CommandBuilder::Type::MoveCursorLeft).LogTo(logStream).build(), 26);
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::UppercaseText).LogTo(logStream).build());
+    assert(editor.GetText() == "QUICK brown fox jumps\nover the lazy dog");
+
+    editor.ApplyCommand(CB(CommandBuilder::Type::SelectText).LogTo(logStream).SelectionSize(5).build());
+    editor.ApplyCommand(CB(CommandBuilder::Type::LowercaseText).LogTo(logStream).build());
+    assert(editor.GetText() == "quick brown fox jumps\nover the lazy dog");
+
+    CommandPtr macroCommand = CommandBuilder()
+            .WithType(CommandBuilder::Type::Macro)
+            .AddSubcommand(CB(CommandBuilder::Type::DeleteWord).build())
+            .AddSubcommand(CB(CommandBuilder::Type::InsertText).Text("Fedor").build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveCursorDown).build())
+            .AddSubcommand(CB(CommandBuilder::Type::MoveToStart).build())
+            .LogTo(logStream)
+            .build();
+
+    ApplyMultiple(editor, macroCommand, 2);
+    assert(editor.GetText() == "Fedor brown fox jumps\nFedor the lazy dog");
+
+    assert(logStream.str() == "ik0j$0vydEphhhhhhhhhhhhhhhhhhhhhhhhhhvUvudEij0dEij0");
+}
 
 int main () {
     TestOneLine();
     TestCopyPaste();
-//    TestLogging();
+    TestLogging();
     return 0;
 }
