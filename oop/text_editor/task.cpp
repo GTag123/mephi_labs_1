@@ -345,6 +345,7 @@ class MoveToStartCommand : public ICommand {
             cursorPosition--;
         }
         cout << "buffer after: " << buffer << ":   cursor pos: " << cursorPosition << endl << endl;
+        cout << "End MoveToStart" << endl;
     }
     void AcceptVisitor(CommandVisitor &visitor) override{
         visitor.VisitMoveToStartCommand(*this);
