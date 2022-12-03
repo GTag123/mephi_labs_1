@@ -1,16 +1,33 @@
-SOURCES := main.cpp task.cpp
-OBJECTS := $(SOURCES:.cpp=.o)
-CFLAGS := -std=c++2a -Wall -Werror
+SOURCES := $(wildcard *.cpp)
 RESULT := main
+SCRIPTS := $(wildcard *.sh)
+SCRIPT_TARGETS := $(SCRIPTS:.sh=_run)
+
+ifeq ($(OS), Windows_NT)
+    USER_OS := Windows
+else
+    USER_OS := $(shell uname -s)
+endif
+
+ifneq ($(USER_OS), Darwin)
+	ASAN_OPTIONS := detect_leaks=1
+endif
+
+OBJECTS := $(SOURCES:.cpp=.o)
+CFLAGS := -g -fsanitize=address -std=c++2a -Wall -Werror
+LDFLAGS := -fsanitize=address
 
 all: run
 
 run: compile
-	./$(RESULT)
+	ASAN_OPTIONS=$(ASAN_OPTIONS) ./$(RESULT)
 
-compile: $(SOURCES) $(RESULT)
+%_run: %.sh
+	/bin/bash $<
 
-.cpp.o:
+compile: $(SOURCES) $(RESULT) $(SCRIPT_TARGETS)
+
+.cpp.o: $(wildcard *.h)
 	g++ -c $(CFLAGS) $< -o $@
 
 $(RESULT): $(OBJECTS)
@@ -18,3 +35,4 @@ $(RESULT): $(OBJECTS)
 
 clean:
 	rm -f $(OBJECTS) $(RESULT)
+
