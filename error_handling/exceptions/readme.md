@@ -19,7 +19,7 @@
 <name> := строка из латинских букв и цифр, начинается с буквы
 <lambda> := \ <argument list> -> <expression>
 <argument list> := <name> <optional argument list>
-<optional argument list> := <name> <argument list> | пустая строка
+<optional argument list> := <name> <optional argument list> | пустая строка
 <binary operation> := + | - | * | /
 ```
 
