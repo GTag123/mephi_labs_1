@@ -189,7 +189,7 @@ void TestLogging() {
 
     ApplyMultiple(editor, macroCommand, 2);
     assert(editor.GetText() == "Fedor brown fox jumps\nFedor the lazy dog");
-//    cout << "ПМИ СОСАТЬЬЬЬЬ!!!!!!!!!!!!!" << endl;
+    cout << "ПМИ СОСАТЬЬЬЬЬ!!!!!!!!!!!!!" << endl;
     cout << logStream.str() << endl;
 
 

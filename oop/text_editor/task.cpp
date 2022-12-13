@@ -94,7 +94,6 @@ void CommandLoggerVisitor::VisitMoveToStartCommand(MoveToStartCommand& command) 
 }
 
 void CommandLoggerVisitor::VisitDeleteWordCommand(DeleteWordCommand& command) {
-    cout << "хуй" << endl;
     this->logStream_ << "dE";
 }
 
@@ -118,6 +117,9 @@ class MoveCursorRightCommand : public ICommand {
     }
     void AcceptVisitor(CommandVisitor &visitor) override{
         visitor.VisitMoveCursorRightCommand(*this);
+    }
+    void hui(int a){
+
     }
 };
 
@@ -451,8 +453,10 @@ CommandPtr CommandBuilder::build() {
             } else
                 return make_shared<SelectTextCommand>(SelectTextCommand((int)this->selectionSize_));
             break;
+
         case Type::DeleteText:
             break;
+
         case Type::CopyText:
             if (this->logStreamPtr_ != NULL){
                 return make_shared<LoggedCommandWrapper>(

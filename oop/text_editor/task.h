@@ -22,7 +22,7 @@ public:
      * В этом методе реализуется полезное действие команды
      */
     virtual void Apply(std::string& buffer, size_t& cursorPosition, std::string& clipboard, TextEditor& editor) = 0;
-
+    // почему если убрать = 0 то будет undefined reference to `vtable for ICommand??
     /*
      * В каждом наследнике интерфейса ICommand должен быть реализован вызов функции в visitor'е,
      * чтобы заработала "двойная диспетчеризация"
