@@ -1,3 +1,8 @@
+SOURCES := $(wildcard *.cpp)
+RESULT := main
+SCRIPTS := $(wildcard *.sh)
+SCRIPT_TARGETS := $(SCRIPTS:.sh=_run)
+
 ifeq ($(OS), Windows_NT)
     USER_OS := Windows
 else
@@ -8,11 +13,26 @@ ifneq ($(USER_OS), Darwin)
 	ASAN_OPTIONS := detect_leaks=1
 endif
 
-CXXFLAGS = -g -std=c++2a -Wall -Werror -fsanitize=address
+OBJECTS := $(SOURCES:.cpp=.o)
+CFLAGS := -g -fsanitize=address -std=c++2a -Wall -Werror
+LDFLAGS := -fsanitize=address
 
-all: main.cpp cow_string.h
-	g++ $(CXXFLAGS) main.cpp -o main
-	ASAN_OPTIONS=$(ASAN_OPTIONS) ./main
+all: run
+
+run: compile
+	ASAN_OPTIONS=$(ASAN_OPTIONS) ./$(RESULT)
+
+%_run: %.sh
+	/bin/bash $<
+
+compile: $(SOURCES) $(RESULT) $(SCRIPT_TARGETS)
+
+.cpp.o: $(wildcard *.h)
+	g++ -c $(CFLAGS) $< -o $@
+
+$(RESULT): $(OBJECTS)
+	g++ $(OBJECTS) $(LDFLAGS) -o $(RESULT)
 
 clean:
-	rm -f main
+	rm -f $(OBJECTS) $(RESULT)
+
