@@ -8,24 +8,36 @@ void TestSimpleMath() {
     Calculator calc;
 
     ExprPtr expr = calc.ParseExpressionLine("5 + 8");
+    cout << "1" << endl;
     cout << expr->Stringify() << endl;
+    cout << "1" << endl;
     cout << calc.EvaluateExpression(expr)->Stringify() << endl;
+    cout << "1" << endl;
     assert(calc.EvaluateExpression(expr)->Stringify() == "13.000000");
+    cout << calc.ProcessString("5 + 10 * 8 - 10") << endl;
     assert(calc.ProcessString("5 + 10 * 8 - 10") == "75.000000");
+    cout << "1" << endl;
     assert(calc.ProcessString("10") == "10.000000");
+    cout << "1" << endl;
     assert(calc.ProcessString("( 10 )") == "10.000000");
+    cout << "1" << endl;
     assert(calc.ProcessString("( 5 * 2 )") == "10.000000");
+    cout << "1" << endl;
     assert(calc.ProcessString("100 / ( 5 * 2 ) * 5") == "50.000000");
 }
 
+
 void TestUnaryFunctions() {
     Calculator calc;
-
+    cout << "cos 0" << endl;
+    ExprPtr expr2 = calc.ParseExpressionLine("cos 0 * sin 3.1415 + cos 0 * sin 3.1415");
+    cout << calc.EvaluateExpression(expr2)->Stringify() << endl;
     ExprPtr expr = calc.ParseExpressionLine("sin 3.1415962");
     cout << expr->Stringify() << endl;
     cout << calc.EvaluateExpression(expr)->Stringify() << endl;
 
     assert(abs(strtod(calc.EvaluateExpression(expr)->Stringify().c_str(), nullptr)) < 0.00001);
+    cout << abs(strtod(calc.ProcessString("sin ( 3.1415962 / 2 )").c_str(), nullptr) - 1) << endl;
     assert(abs(strtod(calc.ProcessString("sin ( 3.1415962 / 2 )").c_str(), nullptr) - 1) < 0.00001);
     assert(abs(strtod(calc.ProcessString("sin 3.1415962 + 2").c_str(), nullptr) - 2) < 0.00001);
 }
@@ -40,7 +52,7 @@ void TestLambda() {
     assert(abs(strtod(calc.EvaluateExpression(expr)->Stringify().c_str(), nullptr) - 1) < 0.00001);
     assert(abs(strtod(calc.ProcessString(R"(( \ x -> cos x ) 0)").c_str(), nullptr) - 1) < 0.00001);
 }
-//
+
 //void TestAssignment() {
 //    Calculator calc;
 //
