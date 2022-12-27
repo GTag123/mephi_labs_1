@@ -20,7 +20,7 @@ compile: $(SOURCES) $(RESULT) $(SCRIPT_TARGETS)
 	g++ -c $(CFLAGS) $< -o $@
 
 $(RESULT): $(OBJECTS)
-	g++ $(OBJECTS) -o $(RESULT)
+	g++ main.o -o $(RESULT)
 
 clean:
 	rm -f $(OBJECTS) $(RESULT)
