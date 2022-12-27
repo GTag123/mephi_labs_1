@@ -6,9 +6,9 @@
 #include <random>
 #include <string>
 #include <unordered_set>
-
+using namespace std;
 bool IsValidKey(const std::string& key) {
-    return key.size() < 16 &&
+    return key.size() < 17 &&
         std::all_of(key.begin(), key.end(), [](unsigned char c) {
             return std::isalnum(c) || c == '_';
         });
@@ -22,6 +22,7 @@ std::vector<std::string> GetKeys(size_t max_count) {
         if (!std::getline(std::cin, line)) {
             break;
         }
+        cout << "line :" << line << endl;
         assert(IsValidKey(line));
         keys.push_back(std::move(line));
     }

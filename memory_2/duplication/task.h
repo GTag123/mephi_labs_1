@@ -22,9 +22,7 @@ vector<shared_ptr<std::string>> DeDuplicate(vector<unique_ptr<string>>& vec){
     vector<shared_ptr<string>> ret;
     unordered_map<string, shared_ptr<string>> m;
     for (int i = 0; i < (int)vec.size(); ++i) {
-//        if (!m.contains(*vec[i])){
-            m[*vec[i]] = make_shared<string>(*vec[i]);
-//        }
+        m[*vec[i]] = make_shared<string>(*vec[i]);
     }
     for (int i = 0; i < (int)vec.size(); ++i) {
         ret.push_back(m[*vec[i]]);
