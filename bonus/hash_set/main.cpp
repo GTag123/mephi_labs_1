@@ -35,7 +35,7 @@ int main() {
     std::cin.tie(nullptr);
 
     std::mt19937 rng(std::chrono::steady_clock::now().time_since_epoch().count());
-    std::uniform_int_distribution<int> dist(50000, 100000);
+    std::uniform_int_distribution<int> dist(40000, 200000);
 
     const size_t initial_size = dist(rng);
     std::unordered_set<std::string> strings(initial_size);
@@ -51,7 +51,7 @@ int main() {
     const double elapsed_time = static_cast<double>(end_time - start_time) / CLOCKS_PER_SEC;
     std::cout << "Elapsed time: " << elapsed_time << " sec" << std::endl;
 
-    if (elapsed_time > 1.5) {
+    if (elapsed_time > 0.44) {
         std::cout << "Victory!!!" << std::endl;
         return 0;
     }
