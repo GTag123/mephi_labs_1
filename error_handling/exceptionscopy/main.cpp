@@ -53,34 +53,34 @@ void TestLambda() {
     assert(abs(strtod(calc.ProcessString(R"(( \ x -> cos x ) 0)").c_str(), nullptr) - 1) < 0.00001);
 }
 
-//void TestAssignment() {
-//    Calculator calc;
-//
-//    calc.ProcessString("a = 5");
-//    assert(calc.ProcessString("a") == "5.000000");
-//    calc.ProcessString("a = 55");
-//    assert(calc.ProcessString("a") == "55.000000");
-//    calc.ProcessString("b = 20");
-//    assert(calc.ProcessString("a + b") == "75.000000");
-//    calc.ProcessString(R"(foo = \ x -> x + a - b )");
-//    assert(calc.ProcessString("foo 10") == "45.000000");
-//
-//    // Лямбда сохраняет свой контекст в момент создания. Присваивание новых значений старым именам не влияет на вычисления
-//    calc.ProcessString("b = 100");
-//    assert(calc.ProcessString("foo 10") == "45.000000");
-//
-//    // Аргументы скрывают внешние имена внутри лямбды, но не затирает их во внешнем контексте
-//    calc.ProcessString(R"(bar = \ a b -> a + b)");
-//    assert(calc.ProcessString("bar 10 10") == "20.000000");
-//    assert(calc.ProcessString("a + b") == "155.000000");
-//
-//    // Для интересующихся, что тут такое происходит: https://ru.wikipedia.org/wiki/Композиция_функций
-//    calc.ProcessString(R"(compose = \ f g x -> f ( g x ))");
-//    calc.ProcessString(R"(plus1 = \ x -> x + 1)");
-//    calc.ProcessString(R"(mult5 = \ x -> x * 5)");
-//    assert(calc.ProcessString("compose plus1 mult5 1") == "6.000000");
-//    assert(calc.ProcessString("compose mult5 plus1 1") == "10.000000");
-//}
+void TestAssignment() {
+    Calculator calc;
+
+    calc.ProcessString("a = 5");
+    assert(calc.ProcessString("a") == "5.000000");
+    calc.ProcessString("a = 55");
+    assert(calc.ProcessString("a") == "55.000000");
+    calc.ProcessString("b = 20");
+    assert(calc.ProcessString("a + b") == "75.000000");
+    calc.ProcessString(R"(foo = \ x -> x + a - b )");
+    assert(calc.ProcessString("foo 10") == "45.000000");
+
+    // Лямбда сохраняет свой контекст в момент создания. Присваивание новых значений старым именам не влияет на вычисления
+    calc.ProcessString("b = 100");
+    assert(calc.ProcessString("foo 10") == "45.000000");
+
+    // Аргументы скрывают внешние имена внутри лямбды, но не затирает их во внешнем контексте
+    calc.ProcessString(R"(bar = \ a b -> a + b)");
+    assert(calc.ProcessString("bar 10 10") == "20.000000");
+    assert(calc.ProcessString("a + b") == "155.000000");
+
+    // Для интересующихся, что тут такое происходит: https://ru.wikipedia.org/wiki/Композиция_функций
+    calc.ProcessString(R"(compose = \ f g x -> f ( g x ))");
+    calc.ProcessString(R"(plus1 = \ x -> x + 1)");
+    calc.ProcessString(R"(mult5 = \ x -> x * 5)");
+    assert(calc.ProcessString("compose plus1 mult5 1") == "6.000000");
+    assert(calc.ProcessString("compose mult5 plus1 1") == "10.000000");
+}
 //
 //void TestCurrying() {
 //    /*
@@ -205,7 +205,7 @@ int main() {
     TestSimpleMath();
     TestUnaryFunctions();
     TestLambda();
-//    TestAssignment();
+    TestAssignment();
 //    TestParsingExceptions();
 //    TestEvaluationExceptions();
 //    TestCurrying();

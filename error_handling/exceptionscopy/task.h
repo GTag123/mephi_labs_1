@@ -248,7 +248,7 @@ public:
         return parser_.ParseString(line, ctx_);
     }
 
-    ExprPtr ParseExpressionLine(const std::string line);
+    ExprPtr ParseExpressionLine(const std::string& line);
 
         /*
          * Разобрать строку в выражение.

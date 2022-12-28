@@ -11,7 +11,7 @@
 
 using namespace std;
 
-bool isDigit(std::string myString) {
+bool isDigit(const std::string& myString) {
 //    std::cout << "digit test: " << myString << std::endl;
     std::istringstream iss(myString);
     float f;
@@ -25,11 +25,11 @@ class NumberObj : public IObject {
 public:
     explicit NumberObj(double num) : num_(num) {}
 
-    std::string Stringify() const override {
+    [[nodiscard]] std::string Stringify() const override {
         return std::to_string(num_);
     }
 
-    double Raw() const {
+    [[nodiscard]] double Raw() const {
         return num_;
     }
 };
@@ -38,7 +38,7 @@ class AdditionFunction : public IObject {
 public:
     AdditionFunction() = default;
 
-    std::string Stringify() const override {
+    [[nodiscard]] std::string Stringify() const override {
         return "+";
     }
 
@@ -49,7 +49,7 @@ public:
 
 class SubstractionFunction : public IObject {
 public:
-    std::string Stringify() const override {
+    [[nodiscard]] std::string Stringify() const override {
         return "-";
     }
 
@@ -60,7 +60,7 @@ public:
 
 class MultiplicationFunction : public IObject {
 public:
-    std::string Stringify() const override {
+    [[nodiscard]] std::string Stringify() const override {
         return "*";
     }
 
@@ -71,7 +71,7 @@ public:
 
 class DivisionFunction : public IObject {
 public:
-    std::string Stringify() const override {
+    [[nodiscard]] std::string Stringify() const override {
         return "/";
     }
 
@@ -216,6 +216,20 @@ double ExprEvaluate(std::vector<Token> expr) {
     return values[values.size() - 1]; // мб erase
 }
 
+struct CtxTypes: public IObject{
+    enum class Type{
+        VAR,
+        LAMBDA
+    };
+    CtxTypes(Type type, vector<Token> value): type_(type), value_(std::move(value)){}
+    Type type_;
+    vector<Token> value_;
+    std::string Stringify() const override{
+        string s; for (auto i: value_) s += i.value_ + " ";
+        return s;
+    }
+};
+
 class SimplyExpression : public IExpression {
     std::string strexpr_;
     vector<Token> tokens_;
@@ -282,13 +296,38 @@ public:
     }
 };
 
+class AssigmentStatement : public IStatement{
+    std::string expr_;
+    vector<Token> tokens_;
+public:
+    AssigmentStatement(std::string expr, vector<Token> tokens) : expr_(std::move(expr)), tokens_(std::move(tokens)) {};
 
+    ObjPtr Execute(Context &ctx) const override{
+        for (int i = 0; i < tokens_.size(); ++i) {
+            while (tokens_[++i].value_ != "="){}
+            if (tokens_[i+1].value_ != "\\"){ // TODO: обработать уже объявленные names в lambda
+                vector<Token> lambda;
+                for (int j = i+1; j < tokens_.size(); ++j) {
+                    lambda.push_back(tokens_[j]);
+                }
+                ctx[tokens_[i-1].value_] = make_shared<CtxTypes>(CtxTypes(CtxTypes::Type::LAMBDA, ));
+            } else {
+                ctx[tokens_[i-1].value_] = make_shared<CtxTypes>(
+                        CtxTypes(CtxTypes::Type::VAR, {{Token::Type::Literal, tokens_[i+1].value_}}));
+            }
+        }
+    }
+    std::string Stringify() const override {
+        std::cout << "------------AssigStatement stringify: " << expr_ << " -----------------" << std::endl;
+        return expr_;
+    }
+};
 class ExpressionStatement : public IStatement {
 private:
     std::string expr_;
     vector<Token> tokens_;
 public:
-    ExpressionStatement(std::string expr, vector<Token> tokens) : expr_(expr), tokens_(std::move(tokens)) {};
+    ExpressionStatement(std::string expr, vector<Token> tokens) : expr_(std::move(expr)), tokens_(std::move(tokens)) {};
 
     ObjPtr Execute(Context &ctx) const override {
         for (int i = 0; i < tokens_.size(); ++i) {
@@ -331,6 +370,7 @@ public:
 
                 return make_shared<const LambdaExpression>(functokens, argvars, argtokens, expr_);
             }
+
         }
 
         return std::make_shared<const SimplyExpression>(tokens_, expr_);
@@ -347,7 +387,7 @@ StatementPtr StatementParser::ParseString(const std::string &s, const Context &c
     return statementPtr;
 }
 
-ExprPtr Calculator::ParseExpressionLine(const std::string line) {
+ExprPtr Calculator::ParseExpressionLine(const std::string& line) {
     StatementPtr ptr3 = parser_.ParseString(line, ctx_);
     ObjPtr ptr2 = ptr3->Execute(ctx_);
     ExprPtr ptr = std::dynamic_pointer_cast<const IExpression>(ptr2);
