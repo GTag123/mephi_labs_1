@@ -22,7 +22,6 @@ std::vector<std::string> GetKeys(size_t max_count) {
         if (!std::getline(std::cin, line)) {
             break;
         }
-        cout << "line :" << line << endl;
         assert(IsValidKey(line));
         keys.push_back(std::move(line));
     }
@@ -55,7 +54,6 @@ int main() {
         std::cout << "Victory!!!" << std::endl;
         return 0;
     }
-
     assert(false);
-    return 1;
 }
+
