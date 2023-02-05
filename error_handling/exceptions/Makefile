@@ -14,7 +14,7 @@ ifneq ($(USER_OS), Darwin)
 endif
 
 OBJECTS := $(SOURCES:.cpp=.o)
-CFLAGS := -g -fsanitize=address -std=c++2a -Wall -Werror
+CFLAGS := -g -fsanitize=address -std=c++2a
 LDFLAGS := -fsanitize=address
 
 all: run

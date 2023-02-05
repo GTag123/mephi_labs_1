@@ -7,6 +7,8 @@
 #include <iostream>
 #include "list"
 
+using namespace std;
+
 class IObject {
     /*
      * Базовый класс для всех объектов, с которыми работает калькулятор
@@ -43,38 +45,8 @@ public:
 };
 
 using ExprPtr = std::shared_ptr<const IExpression>;
-//class NumberObj : public IObject {
-//    double res_;
-//public:
-//    NumberObj(double res) : res_(res) {}
-//
-//    std::string Stringify() const override {
-//        return std::to_string(res_);
-//    }
-//};
-
-//class SimplyExpression : public IExpression {
-//    std::string strexpr_;
-//    int res;
-//public:
-//    SimplyExpression(std::string expr) : strexpr_(std::move(expr)) {};
-//
-//    ObjPtr Evaluate(const Context &ctx) const override {
-//        RDCalculator calc(strexpr_);
-//        return make_shared<NumberObj>(calc.getExpressionResult());
-//    }
-//    std::string Stringify() const override {
-//        return strexpr_;
-//    }
-//};
-
-
-
 
 class IStatement : public IObject {
-    // универсальная хуйня, execute по идее должен возвращать iexpression
-    // тут выбирается либо вычисление, которое делается полностью в iexpression,
-    // либо обычное создание/присвоение переменной, которое ПОХОДУ нужно хранить в контексте
     /*
      * Базовый класс для инструкций, подаваемых на вход калькулятору
      * Одна входная строка в итоге должна быть преобразована в одну инструкцию
@@ -108,27 +80,11 @@ public:
     };
 
     Type type_;
-//    ObjPtr func_;
     std::string value_;
 
-    Token(Type type, std::string value) : type_(type), value_(value) {}
-//    Token(Type type, std::string value, ObjPtr): type_(type), value_(value), func_(std::move(ObjPtr)) {}
-};
+    Token(Type type, std::string value) : type_(type), value_(std::move(value)) {}
 
-//class ExpressionStatement : public IStatement {
-//private:
-//    std::string expr_;
-//public:
-//    ExpressionStatement(std::string expr) : expr_(expr){};
-//    ObjPtr Execute(Context &ctx) const override {
-//        return std::make_shared<SimplyExpression>(expr_)->Evaluate(ctx);
-//    }
-//    std::string Stringify() const override {
-//        std::cout << "------------ExprStatement stringify: " << expr_ << " -----------------" << std::endl;
-//        return expr_;
-//    }
-//
-//};
+};
 
 class StatementParser {
     /*
@@ -142,11 +98,6 @@ public:
     StringType strtype_;
 
     StatementPtr ParseString(const std::string &s, const Context &ctx);
-//    {
-////        std::vector<Token> tokens = Tokenize(s, ctx);
-//        return make_shared<ExpressionStatement>(s);
-//        // TODO: проходимся по всем токенам и выбираем нужный statement либо expression
-//    }
 
     /*
      * Разобрать исходную строку на токены, которые можно в дальнейшем преобразовать в инструкцию для калькулятора
@@ -154,80 +105,11 @@ public:
      */
     std::vector<Token> Tokenize(const std::string &s, const Context &ctx);
 };
-
-//class AssigmentStatement : public IStatement {
-//    ObjPtr Execute(Context &ctx) const override {
-//        // TODO
-//    }
-//};
-
-
-
-//class SimplyExpression : public IExpression {
-//private:
-//    std::list<Token> tokens_;
-//
-//    std::pair<std::list<Token>::iterator, std::string>
-//    tokenfind(const std::vector<std::string> &vecstr, std::list<Token> tokenscopy,
-//              std::list<Token>::iterator startpos) const {
-//        for (auto i = startpos; i != tokenscopy.end(); i++) {
-//            for (auto j: vecstr) {
-//                if (i->value_ == j) return {i, j};
-//            }
-//        }
-//        return {tokenscopy.end(), ""};
-//    }
-//
-//public:
-//    explicit SimplyExpression(std::list<Token> tokens) : tokens_(std::move(tokens)) {};
-//
-//    ObjPtr Evaluate(const Context &ctx) const override {
-//        std::list<Token> tokenscopy = tokens_; // говнокод, убираем токены пишем стрингами
-//
-//
-//
-//
-//        std::pair<std::list<Token>::iterator, std::string> sign; // деление и умножения
-//        while ((sign = this->tokenfind({"*", "\\"}, tokenscopy, tokenscopy.begin())).first != tokenscopy.end()) {
-//            if (sign.second == "*") {
-//                auto prev = (--sign.first)++;
-//                auto next = (++sign.first)--;
-//                sign.first->type_ = Token::Type::Literal;
-//                sign.first->value_ = std::to_string(std::stoi(prev->value_) * std::stoi(
-//                        next->value_)); // TODO: вместо примитивного умножения заменить на контекстные функции
-//                tokenscopy.erase(prev);
-//                tokenscopy.erase(next);
-//            }
-//        }
-//
-//
-//
-//
-//    }
-//
-//    std::string Stringify() const override {
-//
-//    }
-//
-//};
-//
-
-
-
-//class AdditionFunction {
-//    AdditionFunction() = default;
-//
-//    // вместа инта обжекты или другая хуйня
-//    int MyExecute(int a, int b) const;
-//};
-
 class Calculator {
 public:
     Calculator();
     // Добавляем базовые предопределенные функции в калькулятор.
     // Реализовать классы нужно самостоятельно, тригонометрические функции брать из стандартной библиотеки
-    // TODO: хуй знает как вызвать функцию вычисления в классах функций
-    // мб dynamic castом
     std::string ProcessString(const std::string &stringExpression);
 
     ObjPtr ExecuteStatement(StatementPtr statement) {
@@ -259,3 +141,22 @@ private:
     Context ctx_;
     StatementParser parser_;
 };
+
+class LambdaExpression : public IExpression {
+private:
+    vector<Token> functokens_; // тело функции
+    vector<Token> argvars_; // имена аргументов
+    vector<Token> argtokens_; // аргументы, которые передаются в функцию
+    std::string strexpr_;
+    unordered_map<std::string, std::string> argmap_;
+    vector<Token> tokens_;
+    void parse_();
+public:
+    LambdaExpression(vector<Token> tokens, std::string strexpr);
+
+    ObjPtr Evaluate(const Context &ctx) const override;
+
+    std::string Stringify() const override {
+        return strexpr_;
+    }
+}; // todo: лямбда должна парситься тут, а не в statement, если что оборачиваем этот экспрешн
