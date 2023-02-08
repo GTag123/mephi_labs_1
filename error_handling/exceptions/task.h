@@ -160,3 +160,44 @@ public:
         return strexpr_;
     }
 }; // todo: лямбда должна парситься тут, а не в statement, если что оборачиваем этот экспрешн
+
+class Exception : public std::exception {
+public:
+    explicit Exception(std::string message) : message_(std::move(message)) {}
+
+    const char* what() const noexcept override {
+        return message_.c_str();
+    }
+private:
+    std::string message_;
+};
+
+class ParsingException : public Exception {
+public:
+    explicit ParsingException(std::string message) : Exception(std::move(message)) {}
+};
+
+class ParenthesisMismatchException : public ParsingException {
+public:
+    ParenthesisMismatchException() : ParsingException("Cannot parse string: Parenthesis mismatch") {}
+};
+class EmptyParsingResultException : public ParsingException {
+public:
+    EmptyParsingResultException() : ParsingException("Cannot parse string: Empty parsing result") {}
+};
+class BadLambdaArgumentException : public ParsingException {
+public:
+    BadLambdaArgumentException() : ParsingException("Cannot parse string: Expected argument names for the lambda, got 10") {}
+};
+class LambdaWithoutArgumentsException : public ParsingException {
+public:
+    LambdaWithoutArgumentsException() : ParsingException("Cannot parse string: A lambda requires at least one argument") {}
+};
+class UnresolvedReferenceException : public Exception {
+public:
+    explicit UnresolvedReferenceException(std::string message) : Exception(std::move(message)) {}
+};
+class ApplyException : public Exception {
+public:
+    explicit ApplyException(std::string message) : Exception(std::move(message)) {}
+};

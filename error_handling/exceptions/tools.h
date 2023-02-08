@@ -68,6 +68,7 @@ public:
 
     }
 
+    LambdaObj(const LambdaObj& obj) : tokens_(obj.tokens_), strexpr_(obj.strexpr_), ctx_(obj.ctx_) {}
     ExprPtr Do(const vector<Token> &args) const {
         vector<Token> tokens;
         tokens.emplace_back(Token::Type::LeftParenthesis, "(");
@@ -80,9 +81,60 @@ public:
         }
         return make_shared<LambdaExpression>(tokens, strexpr_);
     }
-
+    const LambdaObj removeOneArgument() const {
+        vector<Token> tokens = tokens_;
+        int i = 0;
+        while (tokens[i].type_ != Token::Type::Arrow) i++;
+        i++;
+        tokens.erase(tokens.begin() + i);
+        if (tokens[++i].type_ == Token::Type::Name) {
+            tokens.erase(tokens_.begin() + i);
+        }
+        i = 0;
+        while (tokens[i].type_ != Token::Type::LambdaSign) i++;
+        i++;
+        tokens.erase(tokens.begin() + i);
+        return {tokens, strexpr_, ctx_};
+    }
+    int getArgsCount() const {
+        int i = 0;
+        while (tokens_[i].type_ != Token::Type::LambdaSign) i++;
+        while (tokens_[i].type_ != Token::Type::Arrow) i++;
+        return i - 1;
+    }
+    static const LambdaObj makeUnaryLambda(){
+        vector<Token> tokens;
+        tokens.emplace_back(Token::Type::LambdaSign, "\\");
+        tokens.emplace_back(Token::Type::Name, "x");
+        tokens.emplace_back(Token::Type::Arrow, "->");
+        tokens.emplace_back(Token::Type::Name, "x");
+        return {tokens, "unary", Context()};
+    }
     std::string Stringify() const override {
         return strexpr_;
+    }
+};
+
+
+class LambdaCurryingObj : public IObject {
+    std::vector<Token> tokens_;
+    std::shared_ptr<const LambdaObj> lambdaObj_;
+    const Context &ctx_;
+public:
+    LambdaCurryingObj(std::shared_ptr<const LambdaObj> lambdaObj, std::vector<Token> tokens, const Context& ctx):
+        tokens_(std::move(tokens)), lambdaObj_(std::move(lambdaObj)), ctx_(ctx){}
+    std::string Stringify() const override {
+        return lambdaObj_->Stringify();
+    }
+    ExprPtr Do(const vector<Token> &args) const {
+        vector<Token> tokens;
+        for (auto it: tokens_) {
+            tokens.push_back(std::move(it));
+        }
+        for (auto it: args) {
+            tokens.push_back(std::move(it));
+        }
+        return lambdaObj_->Do(tokens);
     }
 };
 
@@ -155,6 +207,16 @@ public:
     }
 };
 
+struct CombinatoryLogic {
+    static const std::string Combinator;
+    static const std::string Distributor;
+    static const std::string Deleter;
+};
+const std::string CombinatoryLogic::Combinator = "I";
+const std::string CombinatoryLogic::Distributor = "S";
+const std::string CombinatoryLogic::Deleter = "K";
+
+
 std::vector<Token> StatementParser::Tokenize(const std::string &s, const Context &ctx) {
     std::vector<Token> tokens;
     if (s.find('=') != std::string::npos) {
@@ -190,6 +252,9 @@ std::vector<Token> StatementParser::Tokenize(const std::string &s, const Context
 void ExecuteOperation(std::vector<double> &values, std::vector<std::string> &operators) {
     std::string op = *(operators.end() - 1);
     operators.erase(operators.end() - 1);
+    if (op != "sin" && op != "cos" && op != "+" && op != "-" && op != "*" && op != "/" && !isDigit(op)) {
+        throw UnresolvedReferenceException("Unknown name " + op);
+    }
     double rightOperand = *(values.end() - 1);
     values.erase(values.end() - 1);
     double leftOperand;
